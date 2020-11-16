@@ -1,0 +1,36 @@
+.circulatio {
+    position: relative;
+
+    display: flex;
+
+    white-space: nowrap;
+    margin-bottom: 0.5rem;
+    overflow: auto;
+    height: 100%;
+}
+
+/* Columns */
+.circulatio-c {
+    display: inline-block;
+    margin: 0rem 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border: 1px solid #fff;
+    min-width: 25rem;
+    max-width: 35rem;
+    height: 100%;
+}
+
+/* Items */
+.circulatio-i {
+    border: 1px solid #fff;
+    cursor: pointer;
+}
+
+.circulatio-i + .circulatio-i{
+    margin-top: 0.5rem;
+}
+
+/* Optional */
+.circulatio-c-name {
+    font-weight: bold;
+}

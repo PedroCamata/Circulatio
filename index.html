@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Circulatio</title>
+  <link rel="shortcut icon" type="image/png" href="images/osso.png" />
+
+  <link rel="stylesheet" href="Osso/css/osso.min.css">
+  <link rel="stylesheet" href="circulatio.css">
+</head>
+<style>
+  body {
+    padding: 0rem;
+  }
+</style>
+
+<body>
+  <div class="p1">
+    <button class="createItem">Create item in the first column</button>
+  </div>
+  <div class="circulatio">
+    <div class="circulatio-c" data-column-id="1" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <div class="circulatio-c-name">Pedro example column</div>
+      <div class="circulation-c-content">
+        <div class="circulatio-i" data-item-id="1" onclick="console.log('ae')" draggable="true"
+          ondragstart="drag(event)">
+          <div>Ticket Title Example</div>
+        </div>
+      </div>
+    </div>
+    <div class="circulatio-c" data-column-id="2" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <div class="circulatio-c-name">Pedro example column2</div>
+      <div class="circulation-c-content">
+        <div class="circulatio-i" data-item-id="2" draggable="true" ondragstart="drag(event)">
+          <div>Ticket Title Example 2</div>
+        </div>
+      </div>
+    </div>
+    <div class="circulatio-c" data-column-id="3" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <div class="circulatio-c-name">Pedro example column3</div>
+      <div class="circulation-c-content">
+        <div class="circulatio-i" data-item-id="3" draggable="true" ondragstart="drag(event)" data-collumnId="3">
+          <div>Ticket Title Example 3</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script src="circulatio.js"></script>
+
+</html>
