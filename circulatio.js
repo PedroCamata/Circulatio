@@ -68,3 +68,43 @@ document.addEventListener("dragover", function (event) {
     event.preventDefault();
 });
 
+function circulatioBoardToJSON($circulatioId) {
+    var circulatioNode = document.getElementById($circulatioId);
+    var columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
+
+    var circulatioData = {
+        columns: [],
+        columnAction: []
+    }
+
+    for (var i = 0; i < columnNodes.length; i++) {
+        var columnId = columnNodes[i].dataset.columnId;
+        var columnName = columnNodes[i].getElementsByClassName("circulatio-c-name")[0].innerHTML;
+
+        var columnItems = columnNodes[i].getElementsByClassName("circulatio-i");
+        var columnItemsData = [];
+
+        for (var j = 0; j < columnItems.length; j++) {
+            var itemId = columnItems[j].dataset.itemId;
+            var itemName = columnItems[j].getElementsByClassName("circulatio-i-name")[0].innerHTML;
+
+            var newItem = {
+                "id": itemId,
+                "name": itemName
+            };
+
+            columnItemsData.push(newItem);
+        }
+
+        var columnData = {
+            "id": columnId,
+            "name": columnName,
+            "items": columnItemsData
+        }
+
+        circulatioData.columns.push(columnData);
+    }
+
+    return circulatioData;
+}
+
