@@ -1,49 +1,70 @@
 'use strict'
 
-var fieldBeingEditted = null;
-var draggedItemId = null
-var draggedItemNode = null;
+var circulatioDraggedItemNode = null;
+var IsCirculatioDrag = false;
+
+// Config variables
+var circulatioAfterDropFunction;
 
 document.addEventListener("dragstart", function (event) {
-    draggedItemNode = event.target;
-    draggedItemId = draggedItemNode.dataset.itemId;
-    console.log("drag: " + draggedItemId);
-});
-
-document.addEventListener("drop", function (event) {
-    var columnNode;
-    var elem = event.target
-
-    if (elem.matches('.circulation-c')) {
-        columnNode = elem;
-    } else {
-        columnNode = elem.closest('.circulatio-c');
-    }
-
-    if (!columnNode) {
-        // User didn't dragged to a column
+    var elem = event.target;
+    if (!elem.matches(".circulatio-i")) {
+        // User isn't dragging a circulation item
+        IsCirculatioDrag = false;
         return;
     }
 
-    var columnId = columnNode.dataset.columnId;
-    console.log("drop: " + columnId);
+    IsCirculatioDrag = true;
+    circulatioDraggedItemNode = event.target;
+});
 
-    var columnContentNode = columnNode.getElementsByClassName('circulation-c-content')[0];
+document.addEventListener("drop", function (event) {
+    if (!IsCirculatioDrag) {
+        return;
+    }
+
+    var columnNode;
+    var elem = event.target
+
+    if (elem.matches(".circulation-c")) {
+        columnNode = elem;
+    } else {
+        columnNode = elem.closest(".circulatio-c");
+    }
+
+    if (!columnNode) {
+        // User didn't drop it to a circulatio column
+        return;
+    }
+
+    var columnContentNode = columnNode.getElementsByClassName("circulation-c-content")[0];
 
     if (!columnContentNode) {
         console.error("Column content div doesn't exist in this column");
         return;
     }
 
-    columnContentNode.appendChild(draggedItemNode)
+    if (circulatioAfterDropFunction) {
+        var columnId = columnNode.dataset.columnId;
+        var itemId = circulatioDraggedItemNode.dataset.itemId;
+
+        if (!columnId) {
+            console.warn("Circulation column doesn't have an Id, after drop function can't be executed");
+            return;
+        }
+
+        if (!itemId) {
+            console.warn("Circulation item doesn't have an Id, after drop function can't be executed");
+            return;
+        }
+
+        circulatioAfterDropFunction(columnId, itemId);
+    }
+
+    columnContentNode.appendChild(circulatioDraggedItemNode)
 });
 
 document.addEventListener("dragover", function (event) {
     event.preventDefault();
 });
 
-document.addEventListener('click', function (event) {
-    if (event.target.matches('.circulatio-i')) {
-        console.log("you clicked in a item");
-    }
-});
