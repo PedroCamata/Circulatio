@@ -8,16 +8,15 @@ function allowDrop(ev) {
     ev.preventDefault();
 }
 
-function drag(ev) {
-    draggedItemNode = ev.target;
+document.addEventListener("dragstart", function (event) {
+    draggedItemNode = event.target;
     draggedItemId = draggedItemNode.dataset.itemId;
     console.log("drag: " + draggedItemId);
-}
+});
 
-function drop(ev) {
+document.addEventListener("drop", function (event) {
     var columnNode;
-
-    var elem = ev.target
+    var elem = event.target
 
     if (elem.matches('.circulation-c')) {
         columnNode = elem;
@@ -35,7 +34,20 @@ function drop(ev) {
 
     var columnContentNode = columnNode.getElementsByClassName('circulation-c-content')[0];
 
+    if (!columnContentNode) {
+        console.error("Column content div doesn't exist in this column");
+        return;
+    }
+
     columnContentNode.appendChild(draggedItemNode)
+    ev.preventDefault();
+});
+
+document.addEventListener("dragover", function (event) {
+    allowDrop(event);
+});
+
+function drop(ev) {
     ev.preventDefault();
 }
 
