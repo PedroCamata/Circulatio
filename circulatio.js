@@ -4,10 +4,6 @@ var fieldBeingEditted = null;
 var draggedItemId = null
 var draggedItemNode = null;
 
-function allowDrop(ev) {
-    ev.preventDefault();
-}
-
 document.addEventListener("dragstart", function (event) {
     draggedItemNode = event.target;
     draggedItemId = draggedItemNode.dataset.itemId;
@@ -40,16 +36,11 @@ document.addEventListener("drop", function (event) {
     }
 
     columnContentNode.appendChild(draggedItemNode)
-    ev.preventDefault();
 });
 
 document.addEventListener("dragover", function (event) {
-    allowDrop(event);
+    event.preventDefault();
 });
-
-function drop(ev) {
-    ev.preventDefault();
-}
 
 document.addEventListener('click', function (event) {
     if (event.target.matches('.circulatio-i')) {
