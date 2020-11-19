@@ -3,19 +3,106 @@
 // Config variables
 var circulatioAfterDropFunction;
 
-const circulatioElements = {
+var circulatio = {
     createPlaceholder: function() {
-        var elem = document.createElement("div")
-        elem.innerHTML = "Temporary Placeholder";
+        var elem = document.createElement("div");
         elem.classList.add("circulatio-p");
+        elem.innerHTML = "Temporary Placeholder";
         return elem;
     },
-}
+    createItem: function(itemId, name) {
+        var elem = document.createElement("div");
+        elem.classList.add("circulatio-i");
+        elem.dataset.itemId = itemId;
+        elem.innerHTML = "<div class='circulatio-i-name'>" + name + "</div>"
+        return elem;
+    },
+    moveItemToColumn: function(itemNode, columnId, order) {
+        if(!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
+            console.error("itemNode isn't a node element");
+            return false;
+        }
+        
+        var columnNode = circulatio.getColumnContentNodeByColumnId(columnId);
+        if(!columnNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
+            console.error("Column with columnId(" + columnId + ") not found");
+            return false;
+        }
+
+        var qtyColumnItems = columnNode.childElementCount;
+        if(qtyColumnItems > 0 && qtyColumnItems > order) {
+            var childNode = columnNode.children[order];
+            columnNode.insertBefore(itemNode, childNode);
+        } else {
+            columnNode.appendChild(itemNode);
+        }
+
+        return true;
+    },
+    getColumnContentNodeByColumnId: function(columnId) {
+        var columns = document.getElementsByClassName("circulatio-c");
+        for (let i = 0; i < columns.length; i++) {
+            if(columns[i].dataset.columnId == columnId) {
+                return columns[i].getElementsByClassName("circulatio-c-content")[0];
+            }
+        }
+        return null;
+    },
+    getItemNodeByItemId: function(itemId) {
+        var items = document.getElementsByClassName("circulatio-i");
+        for (let i = 0; i < items.length; i++) {
+            if(items[i].dataset.itemId == itemId) {
+                return items[i];
+            }
+        }
+        return null;
+    },
+    circulatioToJSON: function($circulatioId) {
+        var circulatioNode = document.getElementById($circulatioId);
+        var columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
+    
+        var circulatioData = {
+            columns: [],
+            columnAction: []
+        }
+    
+        for (var i = 0; i < columnNodes.length; i++) {
+            var columnId = columnNodes[i].dataset.columnId;
+            var columnName = columnNodes[i].getElementsByClassName("circulatio-c-name")[0].innerHTML;
+    
+            var columnItems = columnNodes[i].getElementsByClassName("circulatio-i");
+            var columnItemsData = [];
+    
+            for (var j = 0; j < columnItems.length; j++) {
+                var itemId = columnItems[j].dataset.itemId;
+                var itemName = columnItems[j].getElementsByClassName("circulatio-i-name")[0].innerHTML;
+    
+                var newItem = {
+                    "id": itemId,
+                    "name": itemName
+                };
+    
+                columnItemsData.push(newItem);
+            }
+    
+            var columnData = {
+                "id": columnId,
+                "name": columnName,
+                "items": columnItemsData
+            }
+    
+            circulatioData.columns.push(columnData);
+        }
+    
+        return circulatioData;
+    }
+};
 
 // Circulatio variables
+const MINIMAL_WAIT_TIME = 33;
 var circulatioDraggedItemNode = null;
 var IsCirculatioDrag = false;
-var placeholderNode = circulatioElements.createPlaceholder();
+var placeholderNode = circulatio.createPlaceholder();
 
 document.addEventListener("dragstart", function (event) {
     var elem = event.target.closest(".circulatio-i");
@@ -27,6 +114,10 @@ document.addEventListener("dragstart", function (event) {
 
     IsCirculatioDrag = true;
     circulatioDraggedItemNode = event.target;
+    
+    setTimeout(() => {
+        circulatioDraggedItemNode.style.display = "none";
+    }, MINIMAL_WAIT_TIME);
 });
 
 document.addEventListener("drop", function (event) {
@@ -45,7 +136,7 @@ document.addEventListener("drop", function (event) {
 
     if (!columnNode) {
         // User didn't drop it to a circulatio column
-        placeholderNode.remove();
+        dropFinish();
         return;
     }
 
@@ -53,7 +144,7 @@ document.addEventListener("drop", function (event) {
 
     if (!columnContentNode) {
         console.error("Column content div doesn't exist in this column");
-        placeholderNode.remove();
+        dropFinish();
         return;
     }
 
@@ -63,23 +154,26 @@ document.addEventListener("drop", function (event) {
 
         if (!columnId) {
             console.warn("Circulation column doesn't have an Id, after drop function can't be executed");
-            placeholderNode.remove();
-            return;
+            dropFinish();
         }
 
         if (!itemId) {
             console.warn("Circulation item doesn't have an Id, after drop function can't be executed");
-            placeholderNode.remove();
-            return;
+            dropFinish();
         }
 
         circulatioAfterDropFunction(columnId, itemId);
     }
 
-    // Delete placeholder
+    // Move element to the placeholder position
     placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
 
-    placeholderNode.remove();
+    dropFinish();
+
+    function dropFinish() {
+        circulatioDraggedItemNode.style.display = null;
+        placeholderNode.remove();
+    }
 });
 
 // Maximum 30 frames per second
@@ -95,7 +189,7 @@ document.addEventListener("dragover", function (event) {
         avoidDragOverFunction = true;
         setTimeout(() => {
             avoidDragOverFunction = false;
-        }, 33);
+        }, MINIMAL_WAIT_TIME);
 
         var targetElem = event.target;
 
@@ -109,8 +203,10 @@ document.addEventListener("dragover", function (event) {
             var columnNode = event.target.closest(".circulatio-c");
             if(columnNode) {
                 columnNode.getElementsByClassName("circulatio-c-content")[0].prepend(placeholderNode);
+                return;
             }
 
+            placeholderNode.remove();
             return;
         }
 
@@ -133,42 +229,4 @@ document.addEventListener("dragover", function (event) {
     }
 });
 
-function circulatioBoardToJSON($circulatioId) {
-    var circulatioNode = document.getElementById($circulatioId);
-    var columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
 
-    var circulatioData = {
-        columns: [],
-        columnAction: []
-    }
-
-    for (var i = 0; i < columnNodes.length; i++) {
-        var columnId = columnNodes[i].dataset.columnId;
-        var columnName = columnNodes[i].getElementsByClassName("circulatio-c-name")[0].innerHTML;
-
-        var columnItems = columnNodes[i].getElementsByClassName("circulatio-i");
-        var columnItemsData = [];
-
-        for (var j = 0; j < columnItems.length; j++) {
-            var itemId = columnItems[j].dataset.itemId;
-            var itemName = columnItems[j].getElementsByClassName("circulatio-i-name")[0].innerHTML;
-
-            var newItem = {
-                "id": itemId,
-                "name": itemName
-            };
-
-            columnItemsData.push(newItem);
-        }
-
-        var columnData = {
-            "id": columnId,
-            "name": columnName,
-            "items": columnItemsData
-        }
-
-        circulatioData.columns.push(columnData);
-    }
-
-    return circulatioData;
-}
