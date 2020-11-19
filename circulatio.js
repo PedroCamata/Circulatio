@@ -18,7 +18,15 @@ var circulatio = {
         elem.innerHTML = "<div class='circulatio-i-name'>" + name + "</div>"
         return elem;
     },
-    moveItemToColumn: function(itemNode, columnId, order) {
+    createColumn: function(columnId, name) {
+        var elem = document.createElement("div");
+        elem.classList.add("circulatio-c");
+        elem.dataset.columnId = columnId;
+        elem.setAttribute("draggable", true);
+        elem.innerHTML = "<div class='circulatio-c-name'>" + name + "</div><div class='circulatio-c-content'></div>"
+        return elem;
+    },
+    moveItem: function(itemNode, columnId, order) {
         if(!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("itemNode isn't a node element");
             return false;
@@ -40,6 +48,34 @@ var circulatio = {
 
         return true;
     },
+    moveColumn: function(columnNode, order) {
+
+        if(!columnNode || columnNode.nodeType !== Node.ELEMENT_NODE) {
+            console.error("Column with columnId(" + columnId + ") not found");
+            return false;
+        }
+
+        var circulatioNode = document.getElementsByClassName("circulatio")[0];
+        
+        var qtyColumns = circulatioNode.childElementCount;
+        if(qtyColumns > 0 && qtyColumns > order) {
+            var childNode = circulatioNode.children[order];
+            circulatioNode.insertBefore(columnNode, childNode);
+        } else {
+            circulatioNode.appendChild(columnNode);
+        }
+
+        return true;
+    },
+    getColumnNodeByColumnId: function(columnId) {
+        var columns = document.getElementsByClassName("circulatio-c");
+        for (let i = 0; i < columns.length; i++) {
+            if(columns[i].dataset.columnId == columnId) {
+                return columns[i];
+            }
+        }
+        return null;
+    },
     getColumnContentNodeByColumnId: function(columnId) {
         var columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
@@ -58,7 +94,7 @@ var circulatio = {
         }
         return null;
     },
-    circulatioToJSON: function($circulatioId) {
+    circulatioToJson: function($circulatioId) {
         var circulatioNode = document.getElementById($circulatioId);
         var columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
     
@@ -96,11 +132,38 @@ var circulatio = {
         }
     
         return circulatioData;
+    },
+    jsonToCirculatio: function(data) {
+        var dataColumns = data.columns;
+
+        for (let i = 0; i < dataColumns.length; i++) {
+            var newColumn = circulatio.createColumn(dataColumns[i].id, dataColumns[i].name);
+
+            // Always add it to the end
+            circulatio.moveColumn(newColumn, Number.MAX_SAFE_INTEGER);
+
+            var dataItems = dataColumns[i].items;
+            for (let j = 0; j < dataItems.length; j++) {
+                var newItem = circulatio.createItem(dataItems[j].id, dataItems[j].name);
+                
+                // Always add it to the end
+                circulatio.moveItem(newItem, dataColumns[i].id, Number.MAX_SAFE_INTEGER);
+            }
+        }
+
+        return true;
+    },
+    removeAllCirculatioElements: function() {
+        var columns = document.getElementsByClassName("circulatio-c");
+        while(columns.length > 0) {
+            columns[0].remove();
+        }
+        return true;
     }
 };
 
 // Circulatio variables
-const MINIMAL_WAIT_TIME = 33;
+const MINIMAL_WAIT_TIME = 33; // Around 30 times per second
 var circulatioDraggedItemNode = null;
 var IsCirculatioDrag = false;
 var placeholderNode = circulatio.createPlaceholder();
