@@ -149,6 +149,11 @@ document.addEventListener("drop", function (event) {
         return;
     }
 
+    // Move element to the placeholder position
+    placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
+
+    dropFinish();
+
     if (circulatioAfterDropFunction) {
         var columnId = columnNode.dataset.columnId;
         var itemId = circulatioDraggedItemNode.dataset.itemId;
@@ -163,13 +168,10 @@ document.addEventListener("drop", function (event) {
             dropFinish();
         }
 
-        circulatioAfterDropFunction(columnId, itemId);
+        var order = Array.prototype.indexOf.call(circulatioDraggedItemNode.parentNode.children, circulatioDraggedItemNode); 
+
+        circulatioAfterDropFunction(columnId, itemId, order);
     }
-
-    // Move element to the placeholder position
-    placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
-
-    dropFinish();
 
     function dropFinish() {
         circulatioDraggedItemNode.style.display = null;

@@ -1,5 +1,5 @@
-circulatioAfterDropFunction = function (columnId, itemId) {
-    console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ")");
+circulatioAfterDropFunction = function (columnId, itemId, order) {
+    console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it assumed the number " + order + " in the order");
 }
 
 // Example function
