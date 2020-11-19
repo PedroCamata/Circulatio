@@ -14,6 +14,7 @@ var circulatio = {
         var elem = document.createElement("div");
         elem.classList.add("circulatio-i");
         elem.dataset.itemId = itemId;
+        elem.setAttribute("draggable", true);
         elem.innerHTML = "<div class='circulatio-i-name'>" + name + "</div>"
         return elem;
     },
@@ -193,6 +194,11 @@ document.addEventListener("dragover", function (event) {
 
         var targetElem = event.target;
 
+        if(!targetElem || targetElem.nodeType != Node.ELEMENT_NODE) {
+            placeholderNode.remove();
+            return;
+        }
+
         if(targetElem.matches(".circulatio-p")) {
             return;
         }
@@ -222,10 +228,6 @@ document.addEventListener("dragover", function (event) {
             targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode.nextSibling);
             
         }
-        //  else {
-        //     // In case user mouse is over collumn name or other collumn 
-        //     targetElem.parentNode.appendChild(placeholderNode);
-        // }
     }
 });
 
