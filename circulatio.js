@@ -7,7 +7,6 @@ var circulatio = {
     createPlaceholder: function() {
         var elem = document.createElement("div");
         elem.classList.add("circulatio-p");
-        elem.innerHTML = "Temporary Placeholder";
         return elem;
     },
     createItem: function(itemId, name) {
@@ -15,14 +14,13 @@ var circulatio = {
         elem.classList.add("circulatio-i");
         elem.dataset.itemId = itemId;
         elem.setAttribute("draggable", true);
-        elem.innerHTML = "<div class='circulatio-i-name'>" + name + "</div>"
+        elem.innerHTML = "<div class='circulatio-i-content'><div class='circulatio-i-name'>" + name + "</div></div>"
         return elem;
     },
     createColumn: function(columnId, name) {
         var elem = document.createElement("div");
         elem.classList.add("circulatio-c");
         elem.dataset.columnId = columnId;
-        elem.setAttribute("draggable", true);
         elem.innerHTML = "<div class='circulatio-c-name'>" + name + "</div><div class='circulatio-c-content'></div>"
         return elem;
     },
@@ -186,6 +184,8 @@ document.addEventListener("dragstart", function (event) {
 
     IsCirculatioDrag = true;
     circulatioDraggedItemNode = event.target;
+
+    placeholderNode.style.height = elem.clientHeight + "px";
     
     setTimeout(() => {
         circulatioDraggedItemNode.style.display = "none";

@@ -13,34 +13,29 @@
 .circulatio-c {
     display: inline-block;
     margin: 0rem 0.5rem;
-    border: 1px solid #fff;
     min-width: 25rem;
     max-width: 35rem;
     height: 100%;
+    background-color: #101010;
+}
+
+.circulatio-c-name {
+    font-weight: bold;
+    padding: 1rem;
 }
 
 /* Item */
 .circulatio-i {
     position: relative;
-    border: 1px solid #fff;
     cursor: pointer;
+    padding: 0 1rem 0.5rem 1rem;
 }
 
-.circulatio-i + .circulatio-i{
-    /* margin-top: 0.5rem; */
+.circulatio-i-content {
+    padding: 0.5rem;
+    background-color: #252525;
 }
 
-/* Item Placeholder */
-.circulatio-p {
-    background-color: red;
-    height: 25px;
-}
-
-/* Optional */
-.circulatio-c-name {
-    font-weight: bold;
-}
-
-.circulatio-i-name {
-    
+.circulatio-c-content .circulatio-i:last-child {
+    padding-bottom: 1rem;
 }
