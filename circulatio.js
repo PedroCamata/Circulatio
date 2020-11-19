@@ -67,6 +67,21 @@ var circulatio = {
 
         return true;
     },
+    removeAllCirculatioElements: function() {
+        var columns = document.getElementsByClassName("circulatio-c");
+        while(columns.length > 0) {
+            columns[0].remove();
+        }
+        return true;
+    },
+    removeItem: function(itemId) {
+        circulatio.getItemNodeByItemId(itemId).remove();
+        return true;
+    },
+    removeColumn: function(columnId) {
+        circulatio.getColumnNodeByColumnId(columnId).remove();
+        return true;
+    },
     getColumnNodeByColumnId: function(columnId) {
         var columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
@@ -151,13 +166,6 @@ var circulatio = {
             }
         }
 
-        return true;
-    },
-    removeAllCirculatioElements: function() {
-        var columns = document.getElementsByClassName("circulatio-c");
-        while(columns.length > 0) {
-            columns[0].remove();
-        }
         return true;
     }
 };
@@ -292,6 +300,8 @@ document.addEventListener("dragover", function (event) {
             // Insert on the bottom of the target
             targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode.nextSibling);
             
+        } else {
+            targetElem.parentNode.appendChild(placeholderNode);
         }
     }
 });

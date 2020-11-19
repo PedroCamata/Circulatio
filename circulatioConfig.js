@@ -3,6 +3,47 @@ circulatioAfterDropFunction = function (columnId, itemId, order) {
 }
 
 // Example functions
+loadFromJson();
+function loadFromJson() {
+    var json = {
+        "columns": [
+          {
+            "id": 1,
+            "name": "To do",
+            "items": [
+              {
+                "id": 1,
+                "name": "First ticket"
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Doing",
+            "items": [
+              {
+                "id": 2,
+                "name": "Second ticket"
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "name": "Done",
+            "items": [
+              {
+                "id": 3,
+                "name": "Third ticket"
+              }
+            ]
+          }
+        ]
+      };
+
+    circulatio.removeAllCirculatioElements();
+    circulatio.jsonToCirculatio(json)
+}
+
 var lastCirculatioItemId = 2;
 function addRandomNewItem() {
     var newItemName = "Item " + Math.random().toString().substr(2);
