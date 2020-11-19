@@ -1,13 +1,24 @@
 'use strict'
 
-var circulatioDraggedItemNode = null;
-var IsCirculatioDrag = false;
-
 // Config variables
 var circulatioAfterDropFunction;
 
+const circulatioElements = {
+    createPlaceholder: function() {
+        var elem = document.createElement("div")
+        elem.innerHTML = "Temporary Placeholder";
+        elem.classList.add("circulatio-p");
+        return elem;
+    },
+}
+
+// Circulatio variables
+var circulatioDraggedItemNode = null;
+var IsCirculatioDrag = false;
+var placeholderNode = circulatioElements.createPlaceholder();
+
 document.addEventListener("dragstart", function (event) {
-    var elem = event.target;
+    var elem = event.target.closest(".circulatio-i");
     if (!elem.matches(".circulatio-i")) {
         // User isn't dragging a circulation item
         IsCirculatioDrag = false;
@@ -24,7 +35,7 @@ document.addEventListener("drop", function (event) {
     }
 
     var columnNode;
-    var elem = event.target
+    var elem = event.target;
 
     if (elem.matches(".circulation-c")) {
         columnNode = elem;
@@ -34,13 +45,15 @@ document.addEventListener("drop", function (event) {
 
     if (!columnNode) {
         // User didn't drop it to a circulatio column
+        placeholderNode.remove();
         return;
     }
 
-    var columnContentNode = columnNode.getElementsByClassName("circulation-c-content")[0];
+    var columnContentNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
 
     if (!columnContentNode) {
         console.error("Column content div doesn't exist in this column");
+        placeholderNode.remove();
         return;
     }
 
@@ -50,22 +63,74 @@ document.addEventListener("drop", function (event) {
 
         if (!columnId) {
             console.warn("Circulation column doesn't have an Id, after drop function can't be executed");
+            placeholderNode.remove();
             return;
         }
 
         if (!itemId) {
             console.warn("Circulation item doesn't have an Id, after drop function can't be executed");
+            placeholderNode.remove();
             return;
         }
 
         circulatioAfterDropFunction(columnId, itemId);
     }
 
-    columnContentNode.appendChild(circulatioDraggedItemNode)
+    // Delete placeholder
+    placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
+
+    placeholderNode.remove();
 });
 
+// Maximum 30 frames per second
+var avoidDragOverFunction = false;
 document.addEventListener("dragover", function (event) {
     event.preventDefault();
+
+    if(avoidDragOverFunction) {
+        return;
+    }
+
+    if(IsCirculatioDrag) {
+        avoidDragOverFunction = true;
+        setTimeout(() => {
+            avoidDragOverFunction = false;
+        }, 33);
+
+        var targetElem = event.target;
+
+        if(targetElem.matches(".circulatio-p")) {
+            return;
+        }
+
+        targetElem = targetElem.closest(".circulatio-i");
+
+        if(!targetElem) {
+            var columnNode = event.target.closest(".circulatio-c");
+            if(columnNode) {
+                columnNode.getElementsByClassName("circulatio-c-content")[0].prepend(placeholderNode);
+            }
+
+            return;
+        }
+
+        var addPlaceholderAboveTargetElement = (targetElem.offsetHeight/2) - event.layerY > 0;
+
+        var closestCirculatioItemNode = targetElem.closest(".circulatio-i");
+        if(addPlaceholderAboveTargetElement) {
+            // Insert on the top of the target
+            targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode);
+
+        } else if(closestCirculatioItemNode.nextSibling) {
+            // Insert on the bottom of the target
+            targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode.nextSibling);
+            
+        }
+        //  else {
+        //     // In case user mouse is over collumn name or other collumn 
+        //     targetElem.parentNode.appendChild(placeholderNode);
+        // }
+    }
 });
 
 function circulatioBoardToJSON($circulatioId) {
@@ -107,4 +172,3 @@ function circulatioBoardToJSON($circulatioId) {
 
     return circulatioData;
 }
-
