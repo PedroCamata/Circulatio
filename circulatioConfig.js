@@ -25,6 +25,10 @@ circulatioColumnAction = function (action, columnId) {
     console.log("User clicked in a column action(action: '" + action + "', columnId: " + columnId + ")");
 }
 
+circulatioItemClick = function (itemId, columnId) {
+    console.log("User clicked in item(id: " + itemId + ") that is in column(id: " + columnId + ")");
+}
+
 // Example functions
 loadFromJson();
 function loadFromJson() {

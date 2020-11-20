@@ -2,7 +2,6 @@
 
 // Config variables
 var circulatioBeforeDropFunction;
-
 var circulatioBeforeRemoveItem;
 var circulatioBeforeRemoveColumn;
 
@@ -10,6 +9,7 @@ var circulatioBeforeRemoveColumn;
 var circulatioNewColumnBtnClick;
 var circulatioNewItemBtnClick;
 var circulatioColumnAction;
+var circulatioItemClick;
 
 var circulatio = {
     createPlaceholder: function () {
@@ -390,6 +390,21 @@ function circulatioButtonClicks(event) {
     if (event.target.matches(".circulatio-btn-new-c")) {
         if (circulatioNewColumnBtnClick) {
             circulatioNewColumnBtnClick();
+        }
+    }
+
+    // Click on item
+    var elem = event.target.closest(".circulatio-i");
+    if (elem) {
+        var columnNode = event.target.closest(".circulatio-c");
+        var columnId = columnNode.dataset.columnId;
+
+        var itemId = elem.dataset.itemId;
+
+        if (columnId && itemId) {
+            if (circulatioItemClick) {
+                circulatioItemClick(itemId, columnId);
+            }
         }
     }
 }
