@@ -19,7 +19,10 @@
     display: inline-block;
     margin: 0rem 0.5rem;
     flex: 0 0 26rem;
-    height: 100%;
+    background-color: #070707;
+}
+
+.circulatio-c:hover {
     background-color: #101010;
 }
 
@@ -72,6 +75,10 @@
     background-color: #252525;
 }
 
+.circulatio-i-content:hover {
+    background-color: #505050;
+}
+
 .circulatio-c-content .circulatio-i:last-child {
     padding-bottom: 1rem;
 }
@@ -84,15 +91,23 @@
     height: 3rem;
     padding: 1rem;
 
-    background-color: #333;
+    background-color: #252525;
     cursor: pointer;
 
     line-height: 3rem;
     text-align: center;
 }
 
+.circulatio-btn-new-c:hover {
+    background-color: #505050;
+}
+
 .circulatio-btn-new-i {
     cursor: pointer;
     padding: 0 1rem 0.5rem 1rem;
     margin: 0rem 1rem;
+}
+
+.circulatio-btn-new-i:hover {
+    font-weight: bold;
 }
