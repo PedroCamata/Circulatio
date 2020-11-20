@@ -9,6 +9,7 @@ var circulatioBeforeRemoveColumn;
 // UI clicks
 var circulatioNewColumnBtnClick;
 var circulatioNewItemBtnClick;
+var circulatioColumnAction;
 
 var circulatio = {
     createPlaceholder: function () {
@@ -165,6 +166,16 @@ var circulatio = {
 
             // Always add it to the end
             circulatio.moveColumn(newColumn, Number.MAX_SAFE_INTEGER);
+
+            var columnActions = data.includeColumnActionDropdown;
+            if (columnActions) {
+                var actionButtons = "";
+                for (let k = 0; k < columnActions.length; k++) {
+                    actionButtons += "<div class='circulatio-c-option' data-action='" + columnActions[k].action + "'>" + columnActions[k].label + "</div>";
+                }
+
+                newColumn.insertAdjacentHTML("afterbegin", "<div class='circulatio-c-options'><span>...</span><div class= 'circulatio-c-options-content'>" + actionButtons + "</div></div>")
+            }
 
             var dataItems = dataColumns[i].items;
             for (let j = 0; j < dataItems.length; j++) {
@@ -350,13 +361,28 @@ function circulatioButtonClicks(event) {
         }
     }
 
+    // Column action
+    if (event.target.matches(".circulatio-c-option")) {
+        var columnNode = event.target.closest(".circulatio-c");
+        var columnId = columnNode.dataset.columnId;
+        var action = event.target.dataset.action;
+
+        if (action && columnId) {
+            if (circulatioColumnAction) {
+                circulatioColumnAction(action, columnId);
+            }
+        }
+    }
+
     // Button to create new item
     if (event.target.matches(".circulatio-btn-new-i")) {
         var columnNode = event.target.closest(".circulatio-c");
         var columnId = columnNode.dataset.columnId;
 
-        if (circulatioNewItemBtnClick) {
-            circulatioNewItemBtnClick(columnId);
+        if (columnId) {
+            if (circulatioNewItemBtnClick) {
+                circulatioNewItemBtnClick(columnId);
+            }
         }
     }
 

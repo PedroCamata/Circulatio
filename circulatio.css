@@ -40,10 +40,19 @@
 .circulatio-c-options-content {
     display: none;
     position: absolute;
-    background-color: #333;
+    background-color: #111;
     min-width: 160px;
     box-shadow: 1rem rgba(0,0,0,0.2);
     z-index: 1;
+    border: 1px solid #333;
+}
+
+.circulatio-c-option {
+    padding: 0rem 1rem;
+}
+
+.circulatio-c-option:hover {
+    background-color: #333;
 }
 
 .circulatio-c-name {

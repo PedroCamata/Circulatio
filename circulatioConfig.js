@@ -21,12 +21,20 @@ circulatioNewItemBtnClick = function (columnId) {
     console.log("User clicked in the new item button at the column(id: " + columnId + ")");
 }
 
+circulatioColumnAction = function (action, columnId) {
+    console.log("User clicked in a column action(action: '" + action + "', columnId: " + columnId + ")");
+}
+
 // Example functions
 loadFromJson();
 function loadFromJson() {
     var json = {
         "includeNewColumnBtn": true,
         "includeNewItemBtn": true,
+        "includeColumnActionDropdown": [
+            { "label": "Rename", "action": "rename" },
+            { "label": "Delete", "action": "delete" }
+        ],
         "columns": [
             {
                 "id": 1,
