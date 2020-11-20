@@ -68,7 +68,7 @@
 }
 
 /* Insert data */
-.createNewColumn {
+.circulatio-btn-new-c {
     display: inline-block;
     margin: 0rem 0.5rem;
     flex: 0 0 26rem;
@@ -82,7 +82,7 @@
     text-align: center;
 }
 
-.createNewItem {
+.circulatio-btn-new-i {
     cursor: pointer;
     padding: 0 1rem 0.5rem 1rem;
     margin: 0rem 1rem;

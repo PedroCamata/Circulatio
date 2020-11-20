@@ -1,11 +1,32 @@
-circulatioAfterDropFunction = function (columnId, itemId, order) {
+circulatioBeforeDropFunction = function (columnId, itemId, order) {
     console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it assumed the number " + order + " in the order");
+    return true;
+}
+
+circulatioBeforeRemoveItem = function (itemId) {
+    console.log("User has order to remove item(id: " + itemId + ")");
+    return true;
+}
+
+circulatioBeforeRemoveColumn = function (columnId) {
+    console.log("User has order to remove column(id: " + columnId + ") and items on it");
+    return true;
+}
+
+circulatioNewColumnBtnClick = function () {
+    console.log("User clicked in the new column button");
+}
+
+circulatioNewItemBtnClick = function (columnId) {
+    console.log("User clicked in the new item button at the column(id: " + columnId + ")");
 }
 
 // Example functions
-// loadFromJson();
+loadFromJson();
 function loadFromJson() {
     var json = {
+        "includeNewColumnBtn": true,
+        "includeNewItemBtn": true,
         "columns": [
             {
                 "id": 1,
