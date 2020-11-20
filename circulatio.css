@@ -1,22 +1,49 @@
 .circulatio {
     position: relative;
-
     display: flex;
 
-    white-space: nowrap;
     margin-bottom: 0.5rem;
-    overflow: auto;
-    height: 100%;
+    overflow-x: auto;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
 }
 
 /* Columns */
 .circulatio-c {
     display: inline-block;
     margin: 0rem 0.5rem;
-    min-width: 25rem;
-    max-width: 35rem;
+    flex: 0 0 26rem;
     height: 100%;
     background-color: #101010;
+}
+
+.circulatio-c-options {
+    position: relative;
+    
+    font-weight: bold;
+    cursor: pointer;
+
+    float: right;
+}
+
+.circulatio-c-options span {
+    width: 2rem;
+    padding: 1rem;
+}
+  
+.circulatio-c-options-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 160px;
+    box-shadow: 1rem rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
 .circulatio-c-name {
@@ -38,4 +65,25 @@
 
 .circulatio-c-content .circulatio-i:last-child {
     padding-bottom: 1rem;
+}
+
+/* Insert data */
+.createNewColumn {
+    display: inline-block;
+    margin: 0rem 0.5rem;
+    flex: 0 0 26rem;
+    height: 3rem;
+    padding: 1rem;
+
+    background-color: #333;
+    cursor: pointer;
+
+    line-height: 3rem;
+    text-align: center;
+}
+
+.createNewItem {
+    cursor: pointer;
+    padding: 0 1rem 0.5rem 1rem;
+    margin: 0rem 1rem;
 }

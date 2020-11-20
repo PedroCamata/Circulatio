@@ -4,12 +4,12 @@
 var circulatioAfterDropFunction;
 
 var circulatio = {
-    createPlaceholder: function() {
+    createPlaceholder: function () {
         var elem = document.createElement("div");
         elem.classList.add("circulatio-p");
         return elem;
     },
-    createItem: function(itemId, name) {
+    createItem: function (itemId, name) {
         var elem = document.createElement("div");
         elem.classList.add("circulatio-i");
         elem.dataset.itemId = itemId;
@@ -17,27 +17,27 @@ var circulatio = {
         elem.innerHTML = "<div class='circulatio-i-content'><div class='circulatio-i-name'>" + name + "</div></div>"
         return elem;
     },
-    createColumn: function(columnId, name) {
+    createColumn: function (columnId, name) {
         var elem = document.createElement("div");
         elem.classList.add("circulatio-c");
         elem.dataset.columnId = columnId;
         elem.innerHTML = "<div class='circulatio-c-name'>" + name + "</div><div class='circulatio-c-content'></div>"
         return elem;
     },
-    moveItem: function(itemNode, columnId, order) {
-        if(!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
+    moveItem: function (itemNode, columnId, order) {
+        if (!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("itemNode isn't a node element");
             return false;
         }
-        
+
         var columnNode = circulatio.getColumnContentNodeByColumnId(columnId);
-        if(!columnNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
+        if (!columnNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("Column with columnId(" + columnId + ") not found");
             return false;
         }
 
         var qtyColumnItems = columnNode.childElementCount;
-        if(qtyColumnItems > 0 && qtyColumnItems > order) {
+        if (qtyColumnItems > 0 && qtyColumnItems > order) {
             var childNode = columnNode.children[order];
             columnNode.insertBefore(itemNode, childNode);
         } else {
@@ -46,17 +46,15 @@ var circulatio = {
 
         return true;
     },
-    moveColumn: function(columnNode, order) {
-
-        if(!columnNode || columnNode.nodeType !== Node.ELEMENT_NODE) {
+    moveColumn: function (columnNode, order) {
+        if (!columnNode || columnNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("Column with columnId(" + columnId + ") not found");
             return false;
         }
 
         var circulatioNode = document.getElementsByClassName("circulatio")[0];
-        
         var qtyColumns = circulatioNode.childElementCount;
-        if(qtyColumns > 0 && qtyColumns > order) {
+        if (qtyColumns > 0 && qtyColumns > order) {
             var childNode = circulatioNode.children[order];
             circulatioNode.insertBefore(columnNode, childNode);
         } else {
@@ -65,88 +63,88 @@ var circulatio = {
 
         return true;
     },
-    removeAllCirculatioElements: function() {
+    removeAllCirculatioElements: function () {
         var columns = document.getElementsByClassName("circulatio-c");
-        while(columns.length > 0) {
+        while (columns.length > 0) {
             columns[0].remove();
         }
         return true;
     },
-    removeItem: function(itemId) {
+    removeItem: function (itemId) {
         circulatio.getItemNodeByItemId(itemId).remove();
         return true;
     },
-    removeColumn: function(columnId) {
+    removeColumn: function (columnId) {
         circulatio.getColumnNodeByColumnId(columnId).remove();
         return true;
     },
-    getColumnNodeByColumnId: function(columnId) {
+    getColumnNodeByColumnId: function (columnId) {
         var columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
-            if(columns[i].dataset.columnId == columnId) {
+            if (columns[i].dataset.columnId == columnId) {
                 return columns[i];
             }
         }
         return null;
     },
-    getColumnContentNodeByColumnId: function(columnId) {
+    getColumnContentNodeByColumnId: function (columnId) {
         var columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
-            if(columns[i].dataset.columnId == columnId) {
+            if (columns[i].dataset.columnId == columnId) {
                 return columns[i].getElementsByClassName("circulatio-c-content")[0];
             }
         }
         return null;
     },
-    getItemNodeByItemId: function(itemId) {
+    getItemNodeByItemId: function (itemId) {
         var items = document.getElementsByClassName("circulatio-i");
         for (let i = 0; i < items.length; i++) {
-            if(items[i].dataset.itemId == itemId) {
+            if (items[i].dataset.itemId == itemId) {
                 return items[i];
             }
         }
         return null;
     },
-    circulatioToJson: function($circulatioId) {
+    circulatioToJson: function ($circulatioId) {
         var circulatioNode = document.getElementById($circulatioId);
         var columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
-    
+
         var circulatioData = {
             columns: [],
             columnAction: []
         }
-    
+
         for (var i = 0; i < columnNodes.length; i++) {
             var columnId = columnNodes[i].dataset.columnId;
             var columnName = columnNodes[i].getElementsByClassName("circulatio-c-name")[0].innerHTML;
-    
+
             var columnItems = columnNodes[i].getElementsByClassName("circulatio-i");
             var columnItemsData = [];
-    
+
             for (var j = 0; j < columnItems.length; j++) {
                 var itemId = columnItems[j].dataset.itemId;
                 var itemName = columnItems[j].getElementsByClassName("circulatio-i-name")[0].innerHTML;
-    
+
                 var newItem = {
                     "id": itemId,
                     "name": itemName
                 };
-    
+
                 columnItemsData.push(newItem);
             }
-    
+
             var columnData = {
                 "id": columnId,
                 "name": columnName,
                 "items": columnItemsData
             }
-    
+
             circulatioData.columns.push(columnData);
         }
-    
+
         return circulatioData;
     },
-    jsonToCirculatio: function(data) {
+    jsonToCirculatio: function (data) {
         var dataColumns = data.columns;
 
         for (let i = 0; i < dataColumns.length; i++) {
@@ -158,7 +156,7 @@ var circulatio = {
             var dataItems = dataColumns[i].items;
             for (let j = 0; j < dataItems.length; j++) {
                 var newItem = circulatio.createItem(dataItems[j].id, dataItems[j].name);
-                
+
                 // Always add it to the end
                 circulatio.moveItem(newItem, dataColumns[i].id, Number.MAX_SAFE_INTEGER);
             }
@@ -186,7 +184,7 @@ document.addEventListener("dragstart", function (event) {
     circulatioDraggedItemNode = event.target;
 
     placeholderNode.style.height = elem.clientHeight + "px";
-    
+
     setTimeout(() => {
         circulatioDraggedItemNode.style.display = "none";
     }, MINIMAL_WAIT_TIME);
@@ -239,7 +237,7 @@ document.addEventListener("drop", function (event) {
             dropFinish();
         }
 
-        var order = Array.prototype.indexOf.call(circulatioDraggedItemNode.parentNode.children, circulatioDraggedItemNode); 
+        var order = Array.prototype.indexOf.call(circulatioDraggedItemNode.parentNode.children, circulatioDraggedItemNode);
 
         circulatioAfterDropFunction(columnId, itemId, order);
     }
@@ -255,11 +253,11 @@ var avoidDragOverFunction = false;
 document.addEventListener("dragover", function (event) {
     event.preventDefault();
 
-    if(avoidDragOverFunction) {
+    if (avoidDragOverFunction) {
         return;
     }
 
-    if(IsCirculatioDrag) {
+    if (IsCirculatioDrag) {
         avoidDragOverFunction = true;
         setTimeout(() => {
             avoidDragOverFunction = false;
@@ -267,20 +265,20 @@ document.addEventListener("dragover", function (event) {
 
         var targetElem = event.target;
 
-        if(!targetElem || targetElem.nodeType != Node.ELEMENT_NODE) {
+        if (!targetElem || targetElem.nodeType != Node.ELEMENT_NODE) {
             placeholderNode.remove();
             return;
         }
 
-        if(targetElem.matches(".circulatio-p")) {
+        if (targetElem.matches(".circulatio-p")) {
             return;
         }
 
         targetElem = targetElem.closest(".circulatio-i");
 
-        if(!targetElem) {
+        if (!targetElem) {
             var columnNode = event.target.closest(".circulatio-c");
-            if(columnNode) {
+            if (columnNode) {
                 columnNode.getElementsByClassName("circulatio-c-content")[0].prepend(placeholderNode);
                 return;
             }
@@ -289,21 +287,45 @@ document.addEventListener("dragover", function (event) {
             return;
         }
 
-        var addPlaceholderAboveTargetElement = (targetElem.offsetHeight/2) - event.layerY > 0;
+        var addPlaceholderAboveTargetElement = (targetElem.offsetHeight / 2) - event.layerY > 0;
 
         var closestCirculatioItemNode = targetElem.closest(".circulatio-i");
-        if(addPlaceholderAboveTargetElement) {
+        if (addPlaceholderAboveTargetElement) {
             // Insert on the top of the target
             targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode);
 
-        } else if(closestCirculatioItemNode.nextSibling) {
+        } else if (closestCirculatioItemNode.nextSibling) {
             // Insert on the bottom of the target
             targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode.nextSibling);
-            
+
         } else {
             targetElem.parentNode.appendChild(placeholderNode);
         }
     }
 });
 
+document.addEventListener("click", function (event) {
+    columnOptionsDropDownToggle(event);
+});
 
+function columnOptionsDropDownToggle(event) {
+    if (event.target.matches(".circulatio-c-options span")) {
+        var targetElem = event.target.closest(".circulatio-c-options");
+
+        var dropDownContent = targetElem.getElementsByClassName("circulatio-c-options-content")[0];
+
+        if (dropDownContent.style.display != "block") {
+            dropDownContent.style.display = "block";
+            console.log("ae1");
+        } else {
+            dropDownContent.style.display = "none";
+        }
+    } else {
+        var allColumnOptions = document.getElementsByClassName("circulatio-c-options-content");
+
+        for (let i = 0; i < allColumnOptions.length; i++) {
+            allColumnOptions[i].style.display = "none";
+            console.log("ae0");
+        }
+    }
+}
