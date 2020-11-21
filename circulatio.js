@@ -198,7 +198,7 @@ var circulatio = {
     }
 };
 
-// Circulatio variables
+// Internal circulatio variables
 const MINIMAL_WAIT_TIME = 33; // Around 30 times per second
 var circulatioDraggedItemNode = null;
 var IsCirculatioDrag = false;
@@ -308,27 +308,42 @@ document.addEventListener("dragover", function (event) {
 
         targetElem = targetElem.closest(".circulatio-i");
 
+        // In case user isn't dragging over a circulatio item
         if (!targetElem) {
             var columnNode = event.target.closest(".circulatio-c");
+
+            // In case user is dragging over a circulatio column
             if (columnNode) {
-                columnNode.getElementsByClassName("circulatio-c-content")[0].prepend(placeholderNode);
+                columnNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
+
+                // Calculates if it should move item to the top or bottom of the column
+                var addPlaceholderAboveTargetElement = (event.target.offsetHeight / 2) - event.layerY > 0;
+
+                if (addPlaceholderAboveTargetElement) {
+                    columnNode.prepend(placeholderNode)
+                } else {
+                    columnNode.appendChild(placeholderNode);
+                }
+
                 return;
             }
 
+            // In case user isn't dragging over a circulatio element
             placeholderNode.remove();
             return;
         }
 
+        // Calculates if it should move item before or after the item
         var addPlaceholderAboveTargetElement = (targetElem.offsetHeight / 2) - event.layerY > 0;
 
-        var closestCirculatioItemNode = targetElem.closest(".circulatio-i");
+        // var closestCirculatioItemNode = targetElem.closest(".circulatio-i");
         if (addPlaceholderAboveTargetElement) {
             // Insert on the top of the target
-            targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode);
+            targetElem.parentNode.insertBefore(placeholderNode, targetElem);
 
-        } else if (closestCirculatioItemNode.nextSibling) {
+        } else if (targetElem.nextSibling) {
             // Insert on the bottom of the target
-            targetElem.parentNode.insertBefore(placeholderNode, closestCirculatioItemNode.nextSibling);
+            targetElem.parentNode.insertBefore(placeholderNode, targetElem.nextSibling);
 
         } else {
             targetElem.parentNode.appendChild(placeholderNode);

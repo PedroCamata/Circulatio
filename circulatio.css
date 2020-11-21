@@ -16,10 +16,12 @@
 
 /* Columns */
 .circulatio-c {
+    position: relative;
     display: inline-block;
     margin: 0rem 0.5rem;
     flex: 0 0 26rem;
     background-color: #070707;
+    height: 100%;
 }
 
 .circulatio-c:hover {
