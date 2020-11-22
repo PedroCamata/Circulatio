@@ -13,12 +13,12 @@ var circulatioItemClick;
 
 var circulatio = {
     createPlaceholder: function () {
-        var elem = document.createElement("div");
+        let elem = document.createElement("div");
         elem.classList.add("circulatio-p");
         return elem;
     },
     createItem: function (itemId, name) {
-        var elem = document.createElement("div");
+        let elem = document.createElement("div");
         elem.classList.add("circulatio-i");
         elem.dataset.itemId = itemId;
         elem.setAttribute("draggable", true);
@@ -26,7 +26,7 @@ var circulatio = {
         return elem;
     },
     createColumn: function (columnId, name) {
-        var elem = document.createElement("div");
+        let elem = document.createElement("div");
         elem.classList.add("circulatio-c");
         elem.dataset.columnId = columnId;
         elem.innerHTML = "<div class='circulatio-c-name'>" + name + "</div><div class='circulatio-c-content'></div>";
@@ -38,15 +38,15 @@ var circulatio = {
             return false;
         }
 
-        var columnNode = circulatio.getColumnContentNodeByColumnId(columnId);
+        let columnNode = circulatio.getColumnContentNodeByColumnId(columnId);
         if (!columnNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("Column with columnId(" + columnId + ") not found");
             return false;
         }
 
-        var qtyColumnItems = columnNode.childElementCount;
+        let qtyColumnItems = columnNode.childElementCount;
         if (qtyColumnItems > 0 && qtyColumnItems > order) {
-            var childNode = columnNode.children[order];
+            let childNode = columnNode.children[order];
             columnNode.insertBefore(itemNode, childNode);
         } else {
             columnNode.appendChild(itemNode);
@@ -60,10 +60,10 @@ var circulatio = {
             return false;
         }
 
-        var circulatioNode = document.getElementsByClassName("circulatio")[0];
-        var qtyColumns = circulatioNode.childElementCount;
+        let circulatioNode = document.getElementsByClassName("circulatio")[0];
+        let qtyColumns = circulatioNode.childElementCount;
         if (qtyColumns > 0 && qtyColumns > order) {
-            var childNode = circulatioNode.children[order];
+            let childNode = circulatioNode.children[order];
             circulatioNode.insertBefore(columnNode, childNode);
         } else {
             circulatioNode.appendChild(columnNode);
@@ -90,7 +90,7 @@ var circulatio = {
         return true;
     },
     getColumnNodeByColumnId: function (columnId) {
-        var columns = document.getElementsByClassName("circulatio-c");
+        let columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
             if (columns[i].dataset.columnId == columnId) {
                 return columns[i];
@@ -99,7 +99,7 @@ var circulatio = {
         return null;
     },
     getColumnContentNodeByColumnId: function (columnId) {
-        var columns = document.getElementsByClassName("circulatio-c");
+        let columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
             if (columns[i].dataset.columnId == columnId) {
                 return columns[i].getElementsByClassName("circulatio-c-content")[0];
@@ -108,7 +108,7 @@ var circulatio = {
         return null;
     },
     getItemNodeByItemId: function (itemId) {
-        var items = document.getElementsByClassName("circulatio-i");
+        let items = document.getElementsByClassName("circulatio-i");
         for (let i = 0; i < items.length; i++) {
             if (items[i].dataset.itemId == itemId) {
                 return items[i];
@@ -120,26 +120,26 @@ var circulatio = {
         return document.getElementsByClassName("circulatio")[0];
     },
     circulatioToJson: function ($circulatioId) {
-        var circulatioNode = document.getElementById($circulatioId);
-        var columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
+        let circulatioNode = document.getElementById($circulatioId);
+        let columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
 
-        var circulatioData = {
+        let circulatioData = {
             columns: [],
             columnAction: []
         }
 
-        for (var i = 0; i < columnNodes.length; i++) {
-            var columnId = columnNodes[i].dataset.columnId;
-            var columnName = columnNodes[i].getElementsByClassName("circulatio-c-name")[0].innerHTML;
+        for (let i = 0; i < columnNodes.length; i++) {
+            let columnId = columnNodes[i].dataset.columnId;
+            let columnName = columnNodes[i].getElementsByClassName("circulatio-c-name")[0].innerHTML;
 
-            var columnItems = columnNodes[i].getElementsByClassName("circulatio-i");
-            var columnItemsData = [];
+            let columnItems = columnNodes[i].getElementsByClassName("circulatio-i");
+            let columnItemsData = [];
 
-            for (var j = 0; j < columnItems.length; j++) {
-                var itemId = columnItems[j].dataset.itemId;
-                var itemName = columnItems[j].getElementsByClassName("circulatio-i-name")[0].innerHTML;
+            for (let j = 0; j < columnItems.length; j++) {
+                let itemId = columnItems[j].dataset.itemId;
+                let itemName = columnItems[j].getElementsByClassName("circulatio-i-name")[0].innerHTML;
 
-                var newItem = {
+                let newItem = {
                     "id": itemId,
                     "name": itemName
                 };
@@ -147,7 +147,7 @@ var circulatio = {
                 columnItemsData.push(newItem);
             }
 
-            var columnData = {
+            let columnData = {
                 "id": columnId,
                 "name": columnName,
                 "items": columnItemsData
@@ -159,17 +159,17 @@ var circulatio = {
         return circulatioData;
     },
     jsonToCirculatio: function (data) {
-        var dataColumns = data.columns;
+        let dataColumns = data.columns;
 
         for (let i = 0; i < dataColumns.length; i++) {
-            var newColumn = circulatio.createColumn(dataColumns[i].id, dataColumns[i].name);
+            let newColumn = circulatio.createColumn(dataColumns[i].id, dataColumns[i].name);
 
             // Always add it to the end
             circulatio.moveColumn(newColumn, Number.MAX_SAFE_INTEGER);
 
-            var columnActions = data.includeColumnActionDropdown;
+            let columnActions = data.includeColumnActionDropdown;
             if (columnActions) {
-                var actionButtons = "";
+                let actionButtons = "";
                 for (let k = 0; k < columnActions.length; k++) {
                     actionButtons += "<div class='circulatio-c-option' data-action='" + columnActions[k].action + "'>" + columnActions[k].label + "</div>";
                 }
@@ -177,9 +177,9 @@ var circulatio = {
                 newColumn.insertAdjacentHTML("afterbegin", "<div class='circulatio-c-options'><span>...</span><div class= 'circulatio-c-options-content'>" + actionButtons + "</div></div>")
             }
 
-            var dataItems = dataColumns[i].items;
+            let dataItems = dataColumns[i].items;
             for (let j = 0; j < dataItems.length; j++) {
-                var newItem = circulatio.createItem(dataItems[j].id, dataItems[j].name);
+                let newItem = circulatio.createItem(dataItems[j].id, dataItems[j].name);
 
                 // Always add it to the end
                 circulatio.moveItem(newItem, dataColumns[i].id, Number.MAX_SAFE_INTEGER);
@@ -227,8 +227,8 @@ document.addEventListener("drop", function (event) {
         return;
     }
 
-    var columnNode;
-    var elem = event.target;
+    let columnNode;
+    let elem = event.target;
 
     if (elem.matches(".circulation-c")) {
         columnNode = elem;
@@ -242,7 +242,7 @@ document.addEventListener("drop", function (event) {
         return;
     }
 
-    var columnContentNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
+    let columnContentNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
 
     if (!columnContentNode) {
         console.error("Column content div doesn't exist in this column");
@@ -251,8 +251,8 @@ document.addEventListener("drop", function (event) {
     }
 
     if (circulatioBeforeDropFunction) {
-        var columnId = columnNode.dataset.columnId;
-        var itemId = circulatioDraggedItemNode.dataset.itemId;
+        let columnId = columnNode.dataset.columnId;
+        let itemId = circulatioDraggedItemNode.dataset.itemId;
 
         if (!columnId) {
             console.warn("Circulation column doesn't have an Id, after drop function can't be executed");
@@ -264,7 +264,19 @@ document.addEventListener("drop", function (event) {
             dropFinish();
         }
 
-        var order = Array.prototype.indexOf.call(circulatioDraggedItemNode.parentNode.children, circulatioDraggedItemNode);
+        // Remove dragged item from array to count the order correctly
+        let order = 0;
+        let parentChildren = placeholderNode.parentNode.childNodes;
+        for (let i = 0; i < parentChildren.length; i++) {
+            if (parentChildren[i] == circulatioDraggedItemNode) {
+                order--;
+            }
+
+            if (parentChildren[i] == placeholderNode) {
+                order += i;
+                break;
+            }
+        }
 
         if (circulatioBeforeDropFunction(columnId, itemId, order)) {
             // Move element to the placeholder position
@@ -295,7 +307,7 @@ document.addEventListener("dragover", function (event) {
             avoidDragOverFunction = false;
         }, MINIMAL_WAIT_TIME);
 
-        var targetElem = event.target;
+        let targetElem = event.target;
 
         if (!targetElem || targetElem.nodeType != Node.ELEMENT_NODE) {
             placeholderNode.remove();
@@ -310,14 +322,14 @@ document.addEventListener("dragover", function (event) {
 
         // In case user isn't dragging over a circulatio item
         if (!targetElem) {
-            var columnNode = event.target.closest(".circulatio-c");
+            let columnNode = event.target.closest(".circulatio-c");
 
             // In case user is dragging over a circulatio column
             if (columnNode) {
                 columnNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
 
                 // Calculates if it should move item to the top or bottom of the column
-                var addPlaceholderAboveTargetElement = (event.target.offsetHeight / 2) - event.layerY > 0;
+                let addPlaceholderAboveTargetElement = (event.target.offsetHeight / 2) - event.layerY > 0;
 
                 if (addPlaceholderAboveTargetElement) {
                     columnNode.prepend(placeholderNode)
@@ -334,9 +346,8 @@ document.addEventListener("dragover", function (event) {
         }
 
         // Calculates if it should move item before or after the item
-        var addPlaceholderAboveTargetElement = (targetElem.offsetHeight / 2) - event.layerY > 0;
+        let addPlaceholderAboveTargetElement = (targetElem.offsetHeight / 2) - event.layerY > 0;
 
-        // var closestCirculatioItemNode = targetElem.closest(".circulatio-i");
         if (addPlaceholderAboveTargetElement) {
             // Insert on the top of the target
             targetElem.parentNode.insertBefore(placeholderNode, targetElem);
@@ -359,9 +370,9 @@ function circulatioButtonClicks(event) {
 
     // Column Options DropDownToggle
     if (event.target.matches(".circulatio-c-options span")) {
-        var targetElem = event.target.closest(".circulatio-c-options");
+        let targetElem = event.target.closest(".circulatio-c-options");
 
-        var dropDownContent = targetElem.getElementsByClassName("circulatio-c-options-content")[0];
+        let dropDownContent = targetElem.getElementsByClassName("circulatio-c-options-content")[0];
 
         if (dropDownContent.style.display != "block") {
             dropDownContent.style.display = "block";
@@ -369,7 +380,7 @@ function circulatioButtonClicks(event) {
             dropDownContent.style.display = "none";
         }
     } else {
-        var allColumnOptions = document.getElementsByClassName("circulatio-c-options-content");
+        let allColumnOptions = document.getElementsByClassName("circulatio-c-options-content");
 
         for (let i = 0; i < allColumnOptions.length; i++) {
             allColumnOptions[i].style.display = "none";
@@ -378,9 +389,9 @@ function circulatioButtonClicks(event) {
 
     // Column action
     if (event.target.matches(".circulatio-c-option")) {
-        var columnNode = event.target.closest(".circulatio-c");
-        var columnId = columnNode.dataset.columnId;
-        var action = event.target.dataset.action;
+        let columnNode = event.target.closest(".circulatio-c");
+        let columnId = columnNode.dataset.columnId;
+        let action = event.target.dataset.action;
 
         if (action && columnId) {
             if (circulatioColumnAction) {
@@ -391,8 +402,8 @@ function circulatioButtonClicks(event) {
 
     // Button to create new item
     if (event.target.matches(".circulatio-btn-new-i")) {
-        var columnNode = event.target.closest(".circulatio-c");
-        var columnId = columnNode.dataset.columnId;
+        let columnNode = event.target.closest(".circulatio-c");
+        let columnId = columnNode.dataset.columnId;
 
         if (columnId) {
             if (circulatioNewItemBtnClick) {
@@ -409,12 +420,12 @@ function circulatioButtonClicks(event) {
     }
 
     // Click on item
-    var elem = event.target.closest(".circulatio-i");
+    let elem = event.target.closest(".circulatio-i");
     if (elem) {
-        var columnNode = event.target.closest(".circulatio-c");
-        var columnId = columnNode.dataset.columnId;
+        let columnNode = event.target.closest(".circulatio-c");
+        let columnId = columnNode.dataset.columnId;
 
-        var itemId = elem.dataset.itemId;
+        let itemId = elem.dataset.itemId;
 
         if (columnId && itemId) {
             if (circulatioItemClick) {
