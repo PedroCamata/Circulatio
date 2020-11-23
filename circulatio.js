@@ -278,12 +278,18 @@ document.addEventListener("drop", function (event) {
             }
         }
 
-        if (circulatioBeforeDropFunction(columnId, itemId, order)) {
-            // Move element to the placeholder position
-            placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
+        let res = circulatioBeforeDropFunction(columnId, itemId, order)
+            .then(function (result) {
+                console.log(result);
+                if (result) {
+                    // Move element to the placeholder position
+                    placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
+                    dropFinish();
+                }
+            }).catch(function (err) {
+                console.error("circulatioBeforeDropFunction API error" + err);
+            });
 
-            dropFinish();
-        }
     }
 
     function dropFinish() {
