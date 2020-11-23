@@ -280,7 +280,6 @@ document.addEventListener("drop", function (event) {
 
         let res = circulatioBeforeDropFunction(columnId, itemId, order)
             .then(function (result) {
-                console.log(result);
                 if (result) {
                     // Move element to the placeholder position
                     placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
