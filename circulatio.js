@@ -1,7 +1,7 @@
-'use strict'
+"use strict";
 
 // Config variables
-var circulatioBeforeDropFunction;
+var circulatioBeforeDropItem;
 var circulatioBeforeRemoveItem;
 var circulatioBeforeRemoveColumn;
 
@@ -12,12 +12,12 @@ var circulatioColumnAction;
 var circulatioItemClick;
 
 var circulatio = {
-    createPlaceholder: function () {
+    createPlaceholder: () => {
         let elem = document.createElement("div");
         elem.classList.add("circulatio-p");
         return elem;
     },
-    createItem: function (itemId, name) {
+    createItem: (itemId, name) => {
         let elem = document.createElement("div");
         elem.classList.add("circulatio-i");
         elem.dataset.itemId = itemId;
@@ -25,14 +25,14 @@ var circulatio = {
         elem.innerHTML = "<div class='circulatio-i-content'><div class='circulatio-i-name'>" + name + "</div></div>"
         return elem;
     },
-    createColumn: function (columnId, name) {
+    createColumn: (columnId, name) => {
         let elem = document.createElement("div");
         elem.classList.add("circulatio-c");
         elem.dataset.columnId = columnId;
         elem.innerHTML = "<div class='circulatio-c-name'>" + name + "</div><div class='circulatio-c-content'></div>";
         return elem;
     },
-    moveItem: function (itemNode, columnId, order) {
+    moveItem: (itemNode, columnId, order) => {
         if (!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("itemNode isn't a node element");
             return false;
@@ -54,7 +54,7 @@ var circulatio = {
 
         return true;
     },
-    moveColumn: function (columnNode, order) {
+    moveColumn: (columnNode, order) => {
         if (!columnNode || columnNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("Column with columnId(" + columnId + ") not found");
             return false;
@@ -71,25 +71,25 @@ var circulatio = {
 
         return true;
     },
-    removeAllCirculatioElements: function () {
+    removeAllCirculatioElements: () => {
         circulatio.getCirculatio().innerHTML = "";
         return true;
     },
-    removeItem: function (itemId) {
+    removeItem: (itemId) => {
         if (circulatioBeforeRemoveItem && !circulatioBeforeRemoveItem(itemId)) {
             return false;
         }
         circulatio.getItemNodeByItemId(itemId).remove();
         return true;
     },
-    removeColumn: function (columnId) {
+    removeColumn: (columnId) => {
         if (circulatioBeforeRemoveItem && !circulatioBeforeRemoveColumn(columnId)) {
             return false;
         }
         circulatio.getColumnNodeByColumnId(columnId).remove();
         return true;
     },
-    getColumnNodeByColumnId: function (columnId) {
+    getColumnNodeByColumnId: (columnId) => {
         let columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
             if (columns[i].dataset.columnId == columnId) {
@@ -98,7 +98,7 @@ var circulatio = {
         }
         return null;
     },
-    getColumnContentNodeByColumnId: function (columnId) {
+    getColumnContentNodeByColumnId: (columnId) => {
         let columns = document.getElementsByClassName("circulatio-c");
         for (let i = 0; i < columns.length; i++) {
             if (columns[i].dataset.columnId == columnId) {
@@ -107,7 +107,7 @@ var circulatio = {
         }
         return null;
     },
-    getItemNodeByItemId: function (itemId) {
+    getItemNodeByItemId: (itemId) => {
         let items = document.getElementsByClassName("circulatio-i");
         for (let i = 0; i < items.length; i++) {
             if (items[i].dataset.itemId == itemId) {
@@ -116,10 +116,10 @@ var circulatio = {
         }
         return null;
     },
-    getCirculatio: function () {
+    getCirculatio: () => {
         return document.getElementsByClassName("circulatio")[0];
     },
-    circulatioToJson: function ($circulatioId) {
+    circulatioToJson: ($circulatioId) => {
         let circulatioNode = document.getElementById($circulatioId);
         let columnNodes = circulatioNode.getElementsByClassName("circulatio-c");
 
@@ -158,7 +158,7 @@ var circulatio = {
 
         return circulatioData;
     },
-    jsonToCirculatio: function (data) {
+    jsonToCirculatio: (data) => {
         let dataColumns = data.columns;
 
         for (let i = 0; i < dataColumns.length; i++) {
@@ -204,7 +204,7 @@ var circulatioDraggedItemNode = null;
 var IsCirculatioDrag = false;
 var placeholderNode = circulatio.createPlaceholder();
 
-document.addEventListener("dragstart", function (event) {
+document.addEventListener("dragstart", (event) => {
     var elem = event.target.closest(".circulatio-i");
     if (!elem || !elem.matches(".circulatio-i")) {
         // User isn't dragging a circulation item
@@ -222,7 +222,7 @@ document.addEventListener("dragstart", function (event) {
     }, MINIMAL_WAIT_TIME);
 });
 
-document.addEventListener("drop", function (event) {
+document.addEventListener("drop", (event) => {
     if (!IsCirculatioDrag) {
         return;
     }
@@ -250,7 +250,7 @@ document.addEventListener("drop", function (event) {
         return;
     }
 
-    if (circulatioBeforeDropFunction) {
+    if (circulatioBeforeDropItem) {
         let columnId = columnNode.dataset.columnId;
         let itemId = circulatioDraggedItemNode.dataset.itemId;
 
@@ -278,14 +278,14 @@ document.addEventListener("drop", function (event) {
             }
         }
 
-        let res = circulatioBeforeDropFunction(columnId, itemId, order)
-            .then(function (result) {
+        circulatioBeforeDropItem(columnId, itemId, order)
+            .then((result) => {
                 if (result) {
                     // Move element to the placeholder position
                     placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
                     dropFinish();
                 }
-            }).catch(function (err) {
+            }).catch((err) => {
                 console.error("circulatioBeforeDropFunction API error" + err);
             });
 
@@ -299,7 +299,7 @@ document.addEventListener("drop", function (event) {
 
 // Maximum 30 frames per second
 var avoidDragOverFunction = false;
-document.addEventListener("dragover", function (event) {
+document.addEventListener("dragover", (event) => {
     event.preventDefault();
 
     if (avoidDragOverFunction) {
@@ -367,7 +367,7 @@ document.addEventListener("dragover", function (event) {
     }
 });
 
-document.addEventListener("click", function (event) {
+document.addEventListener("click", (event) => {
     circulatioButtonClicks(event);
 });
 

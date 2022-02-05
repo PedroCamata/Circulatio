@@ -1,32 +1,34 @@
-circulatioBeforeDropFunction = function (columnId, itemId, order) {
+"use strict";
+
+circulatioBeforeDropItem = (columnId, itemId, order) => {
     // Return a promise here
     console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it assumed the number " + order + " in the order");
-    return true;
+    return new Promise((resolve, reject) => resolve(true));
 }
 
-circulatioBeforeRemoveItem = function (itemId) {
+circulatioBeforeRemoveItem = (itemId) => {
     console.log("User has order to remove item(id: " + itemId + ")");
-    return true;
+    return new Promise((resolve, reject) => resolve(true));
 }
 
-circulatioBeforeRemoveColumn = function (columnId) {
+circulatioBeforeRemoveColumn = (columnId) => {
     console.log("User has order to remove column(id: " + columnId + ") and items on it");
-    return true;
+    return new Promise((resolve, reject) => resolve(true));
 }
 
-circulatioNewColumnBtnClick = function () {
+circulatioNewColumnBtnClick = () => {
     console.log("User clicked in the new column button");
 }
 
-circulatioNewItemBtnClick = function (columnId) {
+circulatioNewItemBtnClick = (columnId) => {
     console.log("User clicked in the new item button at the column(id: " + columnId + ")");
 }
 
-circulatioColumnAction = function (action, columnId) {
+circulatioColumnAction = (action, columnId) => {
     console.log("User clicked in a column action(action: '" + action + "', columnId: " + columnId + ")");
 }
 
-circulatioItemClick = function (itemId, columnId) {
+circulatioItemClick = (itemId, columnId) => {
     console.log("User clicked in item(id: " + itemId + ") that is in column(id: " + columnId + ")");
 }
 
