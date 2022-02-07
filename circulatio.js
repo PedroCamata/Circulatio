@@ -171,10 +171,10 @@ var circulatio = {
             if (columnActions) {
                 let actionButtons = "";
                 for (let k = 0; k < columnActions.length; k++) {
-                    actionButtons += "<div class='circulatio-c-option' data-action='" + columnActions[k].action + "'>" + columnActions[k].label + "</div>";
+                    actionButtons += "<div class='dropdown-option' data-action='" + columnActions[k].action + "'>" + columnActions[k].label + "</div>";
                 }
 
-                newColumn.insertAdjacentHTML("afterbegin", "<div class='circulatio-c-options'><span>...</span><div class= 'circulatio-c-options-content'>" + actionButtons + "</div></div>")
+                newColumn.insertAdjacentHTML("afterbegin", "<div class='dropdown'><button>...</button><div class='dropdown-content'>" + actionButtons + "</div></div>")
             }
 
             let dataItems = dataColumns[i].items;
@@ -373,27 +373,8 @@ document.addEventListener("click", (event) => {
 
 function circulatioButtonClicks(event) {
 
-    // Column Options DropDownToggle
-    if (event.target.matches(".circulatio-c-options span")) {
-        let targetElem = event.target.closest(".circulatio-c-options");
-
-        let dropDownContent = targetElem.getElementsByClassName("circulatio-c-options-content")[0];
-
-        if (dropDownContent.style.display != "block") {
-            dropDownContent.style.display = "block";
-        } else {
-            dropDownContent.style.display = "none";
-        }
-    } else {
-        let allColumnOptions = document.getElementsByClassName("circulatio-c-options-content");
-
-        for (let i = 0; i < allColumnOptions.length; i++) {
-            allColumnOptions[i].style.display = "none";
-        }
-    }
-
     // Column action
-    if (event.target.matches(".circulatio-c-option")) {
+    if (event.target.matches(".circulatio-c .dropdown-option")) {
         let columnNode = event.target.closest(".circulatio-c");
         let columnId = columnNode.dataset.columnId;
         let action = event.target.dataset.action;

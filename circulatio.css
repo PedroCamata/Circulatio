@@ -20,49 +20,25 @@
     display: inline-block;
     margin: 0rem 0.5rem;
     flex: 0 0 26rem;
-    background-color: #070707;
+    background-color: #030303;
     height: 100%;
 }
 
 .circulatio-c:hover {
-    background-color: #101010;
-}
-
-.circulatio-c-options {
-    position: relative;
-    
-    font-weight: bold;
-    cursor: pointer;
-
-    float: right;
-}
-
-.circulatio-c-options span {
-    width: 2rem;
-    padding: 1rem;
-}
-  
-.circulatio-c-options-content {
-    display: none;
-    position: absolute;
-    background-color: #111;
-    min-width: 160px;
-    box-shadow: 1rem rgba(0,0,0,0.2);
-    z-index: 1;
-    border: 1px solid #333;
-}
-
-.circulatio-c-option {
-    padding: 0rem 1rem;
-}
-
-.circulatio-c-option:hover {
-    background-color: #333;
+    background-color: #080808;
 }
 
 .circulatio-c-name {
     font-weight: bold;
     padding: 1rem;
+}
+
+.circulatio-c .dropdown {
+    float: right;
+}
+
+.circulatio-c .dropdown button {
+    border: none;
 }
 
 /* Item */

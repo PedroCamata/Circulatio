@@ -7,7 +7,6 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Circulatio</title>
   <link rel="shortcut icon" type="image/png" href="images/osso.png" />
-
   <link rel="stylesheet" href="Osso/css/osso.min.css">
   <link rel="stylesheet" href="circulatio.css">
 </head>
@@ -23,11 +22,11 @@
   </div>
   <div id="example" class="circulatio">
     <div class="circulatio-c" data-column-id="1">
-      <div class="circulatio-c-options">
+      <div class="dropdown">
         <span>...</span>
-        <div class="circulatio-c-options-content">
-          <div class="circulatio-c-option" data-action="rename">Rename</div>
-          <div class="circulatio-c-option" data-action="delete">Delete</div>
+        <div class="dropdown-content">
+          <div class="dropdown-option" data-action="rename">Rename</div>
+          <div class="dropdown-option" data-action="delete">Delete</div>
         </div>
       </div>
       <div class="circulatio-c-name">To do</div>
@@ -74,6 +73,7 @@
   </div>
 </body>
 
+<script src="Osso/js/osso.min.js"></script>
 <script src="circulatio.js"></script>
 <script src="circulatioConfig.js"></script>
 
