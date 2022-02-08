@@ -1,0 +1,4 @@
+[submodule "osso"]
+	path = osso
+	url = https://github.com/PedroCamata/Osso.git
+	branch = master
