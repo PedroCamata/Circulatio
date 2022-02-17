@@ -4,6 +4,7 @@
 var circulatioBeforeDropItem;
 var circulatioBeforeRemoveItem;
 var circulatioBeforeRemoveColumn;
+var circulatioRenameColumn;
 
 // UI clicks
 var circulatioNewColumnBtnClick;
@@ -12,6 +13,10 @@ var circulatioColumnAction;
 var circulatioItemClick;
 
 var circulatio = {
+    columnActionBtns: [],
+    includeNewColumnBtn: false,
+    includeNewItemBtn: false,
+    allowRenameColumn: false,
     createPlaceholder: () => {
         let elem = document.createElement("div");
         elem.classList.add("circulatio-p");
@@ -26,11 +31,33 @@ var circulatio = {
         return elem;
     },
     createColumn: (columnId, name) => {
-        let elem = document.createElement("div");
-        elem.classList.add("circulatio-c");
-        elem.dataset.columnId = columnId;
-        elem.innerHTML = "<div class='circulatio-c-name'>" + name + "</div><div class='circulatio-c-content'></div>";
-        return elem;
+        let newColumn = document.createElement("div");
+        newColumn.classList.add("circulatio-c");
+        newColumn.dataset.columnId = columnId;
+        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='circulatio-c-name'>" + name + "</div><input class='circulatio-c-rename' type='text' value='" + name + "'></div> <div class='circulatio-c-content'></div>";
+
+        if (!circulatio.allowRenameColumn) {
+            newColumn
+                .getElementsByClassName("circulatio-c-rename")
+                .remove();
+        }
+
+        if (circulatio.columnActionBtns) {
+            let actionButtons = "";
+            for (let k = 0; k < circulatio.columnActionBtns.length; k++) {
+                actionButtons += "<div class='dropdown-option' data-action='" + circulatio.columnActionBtns[k].action + "'>" + circulatio.columnActionBtns[k].label + "</div>";
+            }
+
+            newColumn.insertAdjacentHTML("afterbegin", "<div class='dropdown'><button>...</button><div class='dropdown-content'>" + actionButtons + "</div></div>")
+        }
+
+        if (circulatio.includeNewItemBtn) {
+            newColumn.insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-i'>+ Add new item</div>");
+        }
+
+
+
+        return newColumn;
     },
     moveItem: (itemNode, columnId, order) => {
         if (!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
@@ -67,6 +94,15 @@ var circulatio = {
             circulatioNode.insertBefore(columnNode, childNode);
         } else {
             circulatioNode.appendChild(columnNode);
+        }
+
+        if (circulatio.includeNewColumnBtn) {
+            let newColumnBtn = document.getElementsByClassName("circulatio-btn-new-c")[0];
+            if (newColumnBtn) {
+                circulatioNode.appendChild(newColumnBtn);
+            } else {
+                circulatio.getCirculatio().insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-c'>+ Add new column</div>");
+            }
         }
 
         return true;
@@ -162,20 +198,17 @@ var circulatio = {
         let dataColumns = data.columns;
 
         for (let i = 0; i < dataColumns.length; i++) {
+
+            // Config
+            circulatio.columnActionBtns = data.includeColumnActionDropdown;
+            circulatio.includeNewColumnBtn = data.includeNewColumnBtn;
+            circulatio.includeNewItemBtn = data.includeNewItemBtn;
+            circulatio.allowRenameColumn = data.allowRenameColumn;
+
             let newColumn = circulatio.createColumn(dataColumns[i].id, dataColumns[i].name);
 
             // Always add it to the end
             circulatio.moveColumn(newColumn, Number.MAX_SAFE_INTEGER);
-
-            let columnActions = data.includeColumnActionDropdown;
-            if (columnActions) {
-                let actionButtons = "";
-                for (let k = 0; k < columnActions.length; k++) {
-                    actionButtons += "<div class='dropdown-option' data-action='" + columnActions[k].action + "'>" + columnActions[k].label + "</div>";
-                }
-
-                newColumn.insertAdjacentHTML("afterbegin", "<div class='dropdown'><button>...</button><div class='dropdown-content'>" + actionButtons + "</div></div>")
-            }
 
             let dataItems = dataColumns[i].items;
             for (let j = 0; j < dataItems.length; j++) {
@@ -184,14 +217,6 @@ var circulatio = {
                 // Always add it to the end
                 circulatio.moveItem(newItem, dataColumns[i].id, Number.MAX_SAFE_INTEGER);
             }
-
-            if (data.includeNewItemBtn) {
-                newColumn.insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-i'>+ Add new item</div>");
-            }
-        }
-
-        if (data.includeNewColumnBtn) {
-            circulatio.getCirculatio().insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-c'>+ Add new column</div>");
         }
 
         return true;
@@ -418,5 +443,54 @@ function circulatioButtonClicks(event) {
                 circulatioItemClick(itemId, columnId);
             }
         }
+    }
+
+    // Rename
+    let columnNameNodes = document.getElementsByClassName("circulatio-c-name-content");
+
+    for (let i = 0; i < columnNameNodes.length; i++) {
+        let renameNode = columnNameNodes[i]
+            .getElementsByClassName("circulatio-c-rename")[0];
+
+        renameNode
+            .style
+            .display = "none"
+
+        let renameText = renameNode.value;
+
+        let nameNode = columnNameNodes[i]
+            .getElementsByClassName("circulatio-c-name")[0];
+
+        nameNode.style.display = "block";
+
+        if (renameText != nameNode.innerHTML) {
+
+            let columnNode = columnNameNodes[i].closest(".circulatio-c");
+            if (columnNode) {
+                if (circulatioRenameColumn(renameText, columnNode.dataset.columnId)) {
+                    nameNode.innerHTML = renameText;
+                }
+            }
+        }
+    }
+    if (event.target.matches(".circulatio-c-name")) {
+        let elem = event.target;
+
+        elem.closest(".circulatio-c-name-content")
+            .getElementsByClassName("circulatio-c-rename")[0]
+            .style
+            .display = "block";
+
+        elem.style.display = "none";
+    }
+    if (event.target.matches(".circulatio-c-rename")) {
+        let elem = event.target;
+
+        elem.closest(".circulatio-c-name-content")
+            .getElementsByClassName("circulatio-c-name")[0]
+            .style
+            .display = "none";
+
+        elem.style.display = "block";
     }
 }

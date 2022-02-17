@@ -31,6 +31,12 @@
 .circulatio-c-name {
     font-weight: bold;
     padding: 1rem;
+    cursor: pointer;
+}
+
+.circulatio-c-rename {
+    display: none;
+    margin: 0;
 }
 
 .circulatio-c .dropdown {
@@ -89,3 +95,4 @@
 .circulatio-btn-new-i:hover {
     font-weight: bold;
 }
+
