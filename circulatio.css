@@ -32,11 +32,12 @@
     font-weight: bold;
     padding: 1rem;
     cursor: pointer;
+    margin-bottom: .4rem;
 }
 
 .circulatio-c-rename {
     display: none;
-    margin: 0;
+    margin: .5rem .5rem .5rem 1rem;
 }
 
 .circulatio-c .dropdown {

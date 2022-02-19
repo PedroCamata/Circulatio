@@ -51,7 +51,7 @@ function loadFromJson() {
     var json = {
         "includeNewColumnBtn": true,
         "includeNewItemBtn": true,
-        "allowRenameColumn": true,
+        "allowRenameColumn": false, // BETA
         "includeColumnActionDropdown": [
             { "label": "Rename", "action": "rename" },
             { "label": "Delete", "action": "delete" }
