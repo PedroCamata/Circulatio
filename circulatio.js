@@ -36,12 +36,6 @@ var circulatio = {
         newColumn.dataset.columnId = columnId;
         newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='circulatio-c-name'>" + name + "</div><input class='circulatio-c-rename' type='text' value='" + name + "'></div> <div class='circulatio-c-content'></div>";
 
-        if (!circulatio.allowRenameColumn) {
-            newColumn
-                .getElementsByClassName("circulatio-c-rename")
-                .remove();
-        }
-
         if (circulatio.columnActionBtns) {
             let actionButtons = "";
             for (let k = 0; k < circulatio.columnActionBtns.length; k++) {
@@ -216,6 +210,14 @@ var circulatio = {
 
                 // Always add it to the end
                 circulatio.moveItem(newItem, dataColumns[i].id, Number.MAX_SAFE_INTEGER);
+            }
+        }
+
+        if (!circulatio.allowRenameColumn) {
+            let elems = document.getElementsByClassName("circulatio-c-rename");
+
+            for (let i = 0; i < elems.length; i++) {
+                elems[i].remove();
             }
         }
 
@@ -446,51 +448,53 @@ function circulatioButtonClicks(event) {
     }
 
     // Rename
-    let columnNameNodes = document.getElementsByClassName("circulatio-c-name-content");
+    if (circulatio.allowRenameColumn) {
+        let columnNameNodes = document.getElementsByClassName("circulatio-c-name-content");
 
-    for (let i = 0; i < columnNameNodes.length; i++) {
-        let renameNode = columnNameNodes[i]
-            .getElementsByClassName("circulatio-c-rename")[0];
+        for (let i = 0; i < columnNameNodes.length; i++) {
+            let renameNode = columnNameNodes[i]
+                .getElementsByClassName("circulatio-c-rename")[0];
 
-        renameNode
-            .style
-            .display = "none"
+            renameNode
+                .style
+                .display = "none"
 
-        let renameText = renameNode.value;
+            let renameText = renameNode.value;
 
-        let nameNode = columnNameNodes[i]
-            .getElementsByClassName("circulatio-c-name")[0];
+            let nameNode = columnNameNodes[i]
+                .getElementsByClassName("circulatio-c-name")[0];
 
-        nameNode.style.display = "block";
+            nameNode.style.display = "block";
 
-        if (renameText != nameNode.innerHTML) {
+            if (renameText != nameNode.innerHTML) {
 
-            let columnNode = columnNameNodes[i].closest(".circulatio-c");
-            if (columnNode) {
-                if (circulatioRenameColumn(renameText, columnNode.dataset.columnId)) {
-                    nameNode.innerHTML = renameText;
+                let columnNode = columnNameNodes[i].closest(".circulatio-c");
+                if (columnNode) {
+                    if (circulatioRenameColumn(renameText, columnNode.dataset.columnId)) {
+                        nameNode.innerHTML = renameText;
+                    }
                 }
             }
         }
-    }
-    if (event.target.matches(".circulatio-c-name")) {
-        let elem = event.target;
+        if (event.target.matches(".circulatio-c-name")) {
+            let elem = event.target;
 
-        elem.closest(".circulatio-c-name-content")
-            .getElementsByClassName("circulatio-c-rename")[0]
-            .style
-            .display = "block";
+            elem.closest(".circulatio-c-name-content")
+                .getElementsByClassName("circulatio-c-rename")[0]
+                .style
+                .display = "block";
 
-        elem.style.display = "none";
-    }
-    if (event.target.matches(".circulatio-c-rename")) {
-        let elem = event.target;
+            elem.style.display = "none";
+        }
+        if (event.target.matches(".circulatio-c-rename")) {
+            let elem = event.target;
 
-        elem.closest(".circulatio-c-name-content")
-            .getElementsByClassName("circulatio-c-name")[0]
-            .style
-            .display = "none";
+            elem.closest(".circulatio-c-name-content")
+                .getElementsByClassName("circulatio-c-name")[0]
+                .style
+                .display = "none";
 
-        elem.style.display = "block";
+            elem.style.display = "block";
+        }
     }
 }
