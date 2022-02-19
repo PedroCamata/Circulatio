@@ -447,7 +447,7 @@ function circulatioButtonClicks(event) {
         }
     }
 
-    // Rename
+    // Rename column name
     if (circulatio.allowRenameColumn) {
         let columnNameNodes = document.getElementsByClassName("circulatio-c-name-content");
 

@@ -2,7 +2,7 @@
     position: relative;
     display: flex;
 
-    margin-bottom: 0.5rem;
+    padding-bottom: 5rem;
     overflow-x: auto;
 
     -webkit-touch-callout: none; /* iOS Safari */
