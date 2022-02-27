@@ -25,7 +25,7 @@ circulatioBeforeRemoveColumn = (columnId) => {
 circulatioNewColumnBtnClick = () => {
     console.log("User clicked in the new column button");
 
-    let newColumn = circulatio.createColumn(Math.random().toString(), "New Column", true);
+    let newColumn = circulatio.createColumn(Math.random().toString(), "New Column");
     circulatio.moveColumn(newColumn, Number.MAX_SAFE_INTEGER);
 };
 
