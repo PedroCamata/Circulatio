@@ -34,7 +34,7 @@ var circulatio = {
         let newColumn = document.createElement("div");
         newColumn.classList.add("circulatio-c");
         newColumn.dataset.columnId = columnId;
-        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='circulatio-c-name'>" + name + "</div><input class='circulatio-c-rename' type='text' value='" + name + "'></div> <div class='circulatio-c-content'></div>";
+        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='labelInput'><div class='text circulatio-c-name'>" + name + "</div><input class='input circulatio-c-rename' type='text' value='" + name + "'></div><div class='circulatio-c-content'></div>";
 
         if (circulatio.columnActionBtns) {
             let actionButtons = "";
@@ -214,10 +214,15 @@ var circulatio = {
         }
 
         if (!circulatio.allowRenameColumn) {
-            let elems = document.getElementsByClassName("circulatio-c-rename");
 
-            for (let i = 0; i < elems.length; i++) {
-                elems[i].remove();
+            let labelInputElems = document.getElementsByClassName("labelInput");
+            while (labelInputElems.length > 0) {
+                labelInputElems[0].classList.remove("labelInput");
+            }
+
+            let labelInputRenameInputElems = document.getElementsByClassName("circulatio-c-rename");
+            while (labelInputRenameInputElems.length > 0) {
+                labelInputRenameInputElems[0].remove();
             }
         }
 
@@ -444,57 +449,6 @@ function circulatioButtonClicks(event) {
             if (circulatioItemClick) {
                 circulatioItemClick(itemId, columnId);
             }
-        }
-    }
-
-    // Rename column name
-    if (circulatio.allowRenameColumn) {
-        let columnNameNodes = document.getElementsByClassName("circulatio-c-name-content");
-
-        for (let i = 0; i < columnNameNodes.length; i++) {
-            let renameNode = columnNameNodes[i]
-                .getElementsByClassName("circulatio-c-rename")[0];
-
-            renameNode
-                .style
-                .display = "none"
-
-            let renameText = renameNode.value;
-
-            let nameNode = columnNameNodes[i]
-                .getElementsByClassName("circulatio-c-name")[0];
-
-            nameNode.style.display = "block";
-
-            if (renameText != nameNode.innerHTML) {
-
-                let columnNode = columnNameNodes[i].closest(".circulatio-c");
-                if (columnNode) {
-                    if (circulatioRenameColumn(renameText, columnNode.dataset.columnId)) {
-                        nameNode.innerHTML = renameText;
-                    }
-                }
-            }
-        }
-        if (event.target.matches(".circulatio-c-name")) {
-            let elem = event.target;
-
-            elem.closest(".circulatio-c-name-content")
-                .getElementsByClassName("circulatio-c-rename")[0]
-                .style
-                .display = "block";
-
-            elem.style.display = "none";
-        }
-        if (event.target.matches(".circulatio-c-rename")) {
-            let elem = event.target;
-
-            elem.closest(".circulatio-c-name-content")
-                .getElementsByClassName("circulatio-c-name")[0]
-                .style
-                .display = "none";
-
-            elem.style.display = "block";
         }
     }
 }

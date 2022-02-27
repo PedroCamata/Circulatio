@@ -273,7 +273,7 @@
           <h2>Register</h2>
           <div class="row">
             <label class="left" for="name">Name</label>
-            <input class="full" type="text" placeholder="John Smith" id="name" required>
+            <input class="full" type="text" placeholder="John Smith" id="name" required />
           </div>
           <div class="row">
             <label class="left" for="birthday">Birthday</label>
@@ -281,21 +281,46 @@
           </div>
           <div class="row">
             <label class="left" for="email">Email</label>
-            <input class="full" type="email" placeholder="john.smith@mailbox.com" id="email" required>
+            <input class="full" type="email" placeholder="john.smith@mailbox.com" id="email" required />
           </div>
           <div class="row">
             <div class="col c6">
               <label class="left" for="password">Password</label>
-              <input class="full" type="password" placeholder="********" id="password" required>
+              <input class="full" type="password" placeholder="********" id="password" required />
             </div>
             <div class="col c6">
               <label class="left" for="cpassword">Confirm password</label>
-              <input class="full" type="password" placeholder="********" id="cpassword" required>
+              <input class="full" type="password" placeholder="********" id="cpassword" required />
             </div>
           </div>
           <input class="full primary" type="submit" value="Register">
           <input class="full" type="button" value="Login">
         </form>
+      </div>
+    </section>
+
+    <section class="center">
+      <div class="row">
+        <h2>Disabled inputs</h2>
+      </div>
+      <div>
+        <div class="row">
+          <label class="left" for="firstName">First Name</label>
+          <input class="full" type="email" placeholder="First Name" id="firstName" disabled value="John" />
+        </div>
+        <div class="row">
+          <label class="left" for="lastName">Last Name</label>
+          <input class="full" type="email" placeholder="Last Name" id="lastName" disabled />
+        </div>
+        <div class="row">
+          <label class="left" for="aboutYou">Tell us more about you</label>
+          <textarea id="aboutYou" class="full" name="textarea" type="text"
+            disabled>Lorem ipsum dolor sit amet consectetur adipisicing elit.</textarea>
+        </div>
+        <div class="row">
+          <input type="button" value="Cancel" disabled>
+          <input class="primary" type="button" value="Save" disabled>
+        </div>
       </div>
     </section>
 
@@ -321,19 +346,46 @@
           <input class="primary" type="button" value="Button">
         </div>
         <div>
+          <input type="button" value="Button" disabled>
+          <input class="primary" type="button" value="Button" disabled>
+        </div>
+        <div>
           <a href="#">Direct Link</a>
         </div>
-        <br />
-        <div>
-          <div class="dropdown">
-            <button>Dropdown</button>
-            <div class="dropdown-content">
-              <div class="dropdown-option" onclick="alert('Hi!')">Option 1</div>
-              <div class="dropdown-option" onclick="alert('Welcome!')">Option 2</div>
-              <div class="dropdown-option" onclick="alert('Third option')">Option 3</div>
-            </div>
+      </div>
+    </section>
+
+    <section class="center">
+      <div class="row">
+        <h2>Dropdown</h2>
+      </div>
+      <div class="row">
+        <div class="dropdown">
+          <button>Dropdown</button>
+          <div class="dropdown-content">
+            <div class="dropdown-option" onclick="alert('Hi!')">Option 1</div>
+            <div class="dropdown-option" onclick="alert('Welcome!')">Option 2</div>
+            <div class="dropdown-option" onclick="alert('Third option')">Option 3</div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="center">
+      <div class="row">
+        <h2>Label to Input</h2>
+      </div>
+      <div class="left">
+        <div class="labelInput">
+          <div class="text">Title</div>
+          <input class="input full" name="title" type="text" value="Title" autocomplete="off" />
+        </div>
+        <div class="labelInput">
+          <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+          <textarea class="input full" name="textarea" type="text"
+            autocomplete="off">Lorem ipsum dolor sit amet consectetur adipisicing elit.</textarea>
+        </div>
+        <button id="labelInputBtn" class="primary" autocomplete="off" disabled>Save</button>
       </div>
     </section>
 
@@ -510,7 +562,6 @@
           <br />
           <a class="button modal-btn full" target="uniqueSmallModal">Click to show Small Modal</a>
         </div>
-
       </div>
     </section>
 
@@ -522,7 +573,7 @@
         <div class="card full bg-error p1"><strong>Alert Message:</strong> Nothing happend<span
             class="card-close">x</span>
         </div>
-        <div class="card full bg-warning p1"><strong>Alert Message:</strong> Nothing happend<span
+        <div class="card full bg-warn p1"><strong>Alert Message:</strong> Nothing happend<span
             class="card-close">x</span>
         </div>
         <div class="card full bg-success p1"><strong>Alert Message:</strong> Nothing happend<span
@@ -544,7 +595,7 @@
           <h3><strong>Danger/Error</strong></h3>
           <p>This might be an danger/error message</p>
         </div>
-        <div class="bg-warning p3 col c6">
+        <div class="bg-warn p3 col c6">
           <h3><strong>Warning</strong></h3>
           <p>This might be a warning message</p>
         </div>
@@ -693,5 +744,13 @@
 </body>
 
 <script src="js/osso.js"></script>
+<script>
+  // TextInput example
+  labelInputAction = (name, newValue) => {
+    console.log("User changed '" + name + "' value to '" + newValue + "'");
+    document.getElementById("labelInputBtn").disabled = false;
+    return true;
+  };
+</script>
 
 </html>

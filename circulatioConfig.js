@@ -1,5 +1,11 @@
 "use strict";
 
+// Osso labelInput
+labelInputAction = (name, newValue) => {
+    console.log("User changed '" + name + "' value to '" + newValue + "'");
+    return true;
+};
+
 circulatioBeforeDropItem = (columnId, itemId, order) => {
     // Return a promise here
     console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it assumed the number " + order + " in the order");
@@ -51,9 +57,9 @@ function loadFromJson() {
     var json = {
         "includeNewColumnBtn": true,
         "includeNewItemBtn": true,
-        "allowRenameColumn": false, // BETA
+        "allowRenameColumn": true,
         "includeColumnActionDropdown": [
-            { "label": "Rename", "action": "rename" },
+            { "label": "Other", "action": "other" },
             { "label": "Delete", "action": "delete" }
         ],
         "columns": [

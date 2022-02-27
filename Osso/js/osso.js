@@ -1,5 +1,7 @@
 "use strict";
 
+let labelInputAction = false;
+
 document.addEventListener('click', (event) => {
     if (event.target.matches('.modal-btn')
         || event.target.matches('.modal')) {
@@ -87,4 +89,37 @@ document.addEventListener('click', (event) => {
             allColumnOptions[i].style.display = "none";
         }
     }
+
+    // Label input click
+    if (event.target.matches(".labelInput .text")) {
+        // Show input
+        let textLabelInput = event.target;
+        textLabelInput.closest(".labelInput")
+            .getElementsByClassName("input")[0]
+            .style
+            .display = "inline-block";
+
+        // Hide text
+        textLabelInput.style.display = "none";
+    } else if (!event.target.matches(".labelInput .input")) {
+        let labelInputElems = document.getElementsByClassName("labelInput");
+        for (let i = 0; i < labelInputElems.length; i++) {
+            let inputElem = labelInputElems[i].getElementsByClassName("input")[0];
+            let inputValue = inputElem.value;
+
+            let textElem = labelInputElems[i].getElementsByClassName("text")[0];
+
+            if (inputValue != textElem.innerHTML
+                && labelInputAction) {
+                // Call API
+                if (labelInputAction(inputElem.name, inputValue)) {
+                    textElem.innerHTML = inputValue;
+                }
+            }
+
+            textElem.style.display = "inherit";
+            inputElem.style.display = "";
+        }
+    }
+
 }, false);

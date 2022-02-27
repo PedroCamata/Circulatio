@@ -224,21 +224,31 @@ input[type="button"] {
     outline: 0;
     text-decoration: none;
   }
-}
 
-.button.primary,
-button.primary,
-input[type="submit"].primary,
-input[type="reset"].primary,
-input[type="button"].primary {
-  color: $primary-button-text-color;
-  background-color: $primary-button-background-color;
-  border-color: $primary-button-background-color;
-
-  &:hover, &:focus {
+  &.primary {
     color: $primary-button-text-color;
-    background-color: $primary-button-hover-background-color;
-    border-color: $primary-button-hover-background-color;
+    background-color: $primary-button-background-color;
+    border-color: $primary-button-background-color;
+
+    &:hover, &:focus {
+      color: $primary-button-text-color;
+      background-color: $primary-button-hover-background-color;
+      border-color: $primary-button-hover-background-color;
+    }
+  }
+
+  &:disabled {
+    color: $input-hover;
+    background-color: $code-background-color;
+    border-color: transparent;
+
+    &:hover, &:focus {
+      color: $input-hover;
+      background-color: $code-background-color;
+      border-color: transparent;
+      outline: 0;
+      text-decoration: none;
+    }
   }
 }
 
@@ -262,6 +272,20 @@ select {
   box-shadow: none;
   box-sizing: border-box;
   font-family: $font-stack;
+
+  &:disabled {
+    color: $input-hover;
+    background-color: $code-background-color;
+    border: none;
+
+    &:hover, &:focus {
+      color: $input-hover;
+      background-color: $code-background-color;
+      border-color: $default-button-hover-color;
+      outline: 0;
+      text-decoration: none;
+    }
+  }
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -320,6 +344,31 @@ select:focus {
       border-color: $primary-button-hover-background-color;
       background-color: $primary-button-background-color;
     }
+  }
+}
+
+// Click text to input
+.labelInput {
+  & div.text {
+    line-height: 3.8rem;
+  }
+  
+  & .text {
+    border: $border;
+    border-color: transparent;
+    
+    &:hover {
+      border: $border;
+      border-radius: $border-radius;
+      color: $default-button-text-color;
+      border-color: $primary-button-hover-background-color;
+      background-color: $text-selection-color;
+    }
+  }
+
+  & .input {
+    display: none;
+    margin: 0;
   }
 }
 
@@ -636,7 +685,7 @@ section:after {
     background-color: #140001 
   }
   
-  .bg-warning {
+  .bg-warn {
     background-color: #141000;
   }
   
@@ -652,7 +701,7 @@ section:after {
     background-color: #FFF0F1 
   }
   
-  .bg-warning {
+  .bg-warn {
     background-color: #FFFBEE;
   }
   
