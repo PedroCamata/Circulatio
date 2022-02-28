@@ -34,7 +34,7 @@ var circulatio = {
         let newColumn = document.createElement("div");
         newColumn.classList.add("circulatio-c");
         newColumn.dataset.columnId = columnId;
-        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='labelInput'><div class='text circulatio-c-name'>" + name + "</div><input class='input circulatio-c-rename' type='text' value='" + name + "'></div><div class='circulatio-c-content'></div>";
+        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='labelInput'><div class='text circulatio-c-name'>" + name + "</div><input class='input circulatio-c-rename' name='c-" + columnId + "' type='text' value='" + name + "'/></div><div class='circulatio-c-content'></div>";
 
         if (circulatio.columnActionBtns) {
             let actionButtons = "";
