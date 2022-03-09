@@ -1,6 +1,11 @@
 "use strict";
 
 // Osso labelInput
+labelInputBeforeAction = (name) => {
+    console.log("User clicked on '" + name + "' labelInput");
+    return true;
+};
+
 labelInputAction = (name, newValue) => {
     console.log("User changed '" + name + "' value to '" + newValue + "'");
     return true;
