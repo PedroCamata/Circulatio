@@ -63,6 +63,7 @@ function loadFromJson() {
         "includeNewColumnBtn": true,
         "includeNewItemBtn": true,
         "allowRenameColumn": true,
+        "allowMoveItems": true,
         "includeColumnActionDropdown": [
             { "label": "Other", "action": "other" },
             { "label": "Delete", "action": "delete" }

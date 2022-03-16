@@ -17,6 +17,7 @@ var circulatio = {
     includeNewColumnBtn: false,
     includeNewItemBtn: false,
     allowRenameColumn: false,
+    allowMoveItems: false,
     createPlaceholder: () => {
         let elem = document.createElement("div");
         elem.classList.add("circulatio-p");
@@ -26,7 +27,7 @@ var circulatio = {
         let elem = document.createElement("div");
         elem.classList.add("circulatio-i");
         elem.dataset.itemId = itemId;
-        elem.setAttribute("draggable", true);
+        elem.setAttribute("draggable", circulatio.allowMoveItems);
         elem.innerHTML = "<div class='circulatio-i-content'><div class='circulatio-i-name'>" + name + "</div></div>"
         return elem;
     },
@@ -34,7 +35,7 @@ var circulatio = {
         let newColumn = document.createElement("div");
         newColumn.classList.add("circulatio-c");
         newColumn.dataset.columnId = columnId;
-        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='labelInput'><div class='text circulatio-c-name'>" + name + "</div><input class='input circulatio-c-rename' name='c-" + columnId + "' type='text' value='" + name + "'/></div><div class='circulatio-c-content'></div>";
+        newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='labelInput'><input class='input circulatio-c-rename' name='c-" + columnId + "' type='text' value='" + name + "'/><div class='text circulatio-c-name'>" + name + "</div></div><div class='circulatio-c-content'></div>";
 
         if (circulatio.columnActionBtns) {
             let actionButtons = "";
@@ -48,8 +49,6 @@ var circulatio = {
         if (circulatio.includeNewItemBtn) {
             newColumn.insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-i'>+ Add new item</div>");
         }
-
-
 
         return newColumn;
     },
@@ -198,6 +197,7 @@ var circulatio = {
             circulatio.includeNewColumnBtn = data.includeNewColumnBtn;
             circulatio.includeNewItemBtn = data.includeNewItemBtn;
             circulatio.allowRenameColumn = data.allowRenameColumn;
+            circulatio.allowMoveItems = data.allowMoveItems;
 
             let newColumn = circulatio.createColumn(dataColumns[i].id, dataColumns[i].name);
 
@@ -237,6 +237,10 @@ var IsCirculatioDrag = false;
 var placeholderNode = circulatio.createPlaceholder();
 
 document.addEventListener("dragstart", (event) => {
+    if (!circulatio.allowMoveItems) {
+        return;
+    }
+
     var elem = event.target.closest(".circulatio-i");
     if (!elem || !elem.matches(".circulatio-i")) {
         // User isn't dragging a circulation item
