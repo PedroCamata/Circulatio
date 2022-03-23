@@ -361,6 +361,7 @@ select:focus {
   line-height: 3.8rem;
 }
 .labelInput .text {
+  min-height: 3.8rem;
   border: 1px solid #444;
   border-color: transparent;
 }

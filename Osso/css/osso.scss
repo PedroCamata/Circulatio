@@ -354,6 +354,7 @@ select:focus {
   }
   
   & .text {
+    min-height: 3.8rem;
     border: $border;
     border-color: transparent;
     
