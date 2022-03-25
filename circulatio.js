@@ -2,6 +2,7 @@
 
 // Config variables
 var circulatioBeforeDropItem;
+var circulatioBeforeDropColumn;
 var circulatioBeforeRemoveItem;
 var circulatioBeforeRemoveColumn;
 var circulatioRenameColumn;
@@ -18,9 +19,14 @@ var circulatio = {
     includeNewItemBtn: false,
     allowRenameColumn: false,
     allowMoveItems: false,
-    createPlaceholder: () => {
+    createItemPlaceholder: () => {
         let elem = document.createElement("div");
-        elem.classList.add("circulatio-p");
+        elem.classList.add("circulatio-p-i");
+        return elem;
+    },
+    createColumnPlaceholder: () => {
+        let elem = document.createElement("div");
+        elem.classList.add("circulatio-p-c");
         return elem;
     },
     createItem: (itemId, name) => {
@@ -35,6 +41,7 @@ var circulatio = {
         let newColumn = document.createElement("div");
         newColumn.classList.add("circulatio-c");
         newColumn.dataset.columnId = columnId;
+        newColumn.setAttribute("draggable", circulatio.allowMoveItems);
         newColumn.innerHTML = "<div class='circulatio-c-name-content'><div class='labelInput'><input class='input circulatio-c-rename' name='c-" + columnId + "' type='text' value='" + name + "'/><div class='text circulatio-c-name'>" + name + "</div></div><div class='circulatio-c-content'></div>";
 
         if (circulatio.columnActionBtns) {
@@ -52,7 +59,7 @@ var circulatio = {
 
         return newColumn;
     },
-    moveItem: (itemNode, columnId, order) => {
+    moveItem: (itemNode, columnId, position) => {
         if (!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("itemNode isn't a node element");
             return false;
@@ -65,8 +72,8 @@ var circulatio = {
         }
 
         let qtyColumnItems = columnNode.childElementCount;
-        if (qtyColumnItems > 0 && qtyColumnItems > order) {
-            let childNode = columnNode.children[order];
+        if (qtyColumnItems > 0 && qtyColumnItems > position) {
+            let childNode = columnNode.children[position];
             columnNode.insertBefore(itemNode, childNode);
         } else {
             columnNode.appendChild(itemNode);
@@ -74,27 +81,35 @@ var circulatio = {
 
         return true;
     },
-    moveColumn: (columnNode, order) => {
+    moveColumn: (columnNode, position) => {
         if (!columnNode || columnNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("Column with columnId(" + columnId + ") not found");
             return false;
         }
 
-        let circulatioNode = document.getElementsByClassName("circulatio")[0];
-        let qtyColumns = circulatioNode.childElementCount;
-        if (qtyColumns > 0 && qtyColumns > order) {
-            let childNode = circulatioNode.children[order];
-            circulatioNode.insertBefore(columnNode, childNode);
+        let circulatioNode = circulatio.getCirculatio();
+        let columnListNode = document.getElementsByClassName("circulatio-c-list")[0];
+        if (!columnListNode) {
+            // Create list
+            columnListNode = document.createElement("div");
+            columnListNode.classList.add("circulatio-c-list");
+            circulatioNode.appendChild(columnListNode);
+        }
+
+        let qtyColumns = columnListNode.childElementCount;
+        if (qtyColumns > 0 && qtyColumns > position) {
+            let childNode = columnListNode.children[position];
+            columnListNode.insertBefore(columnNode, childNode);
         } else {
-            circulatioNode.appendChild(columnNode);
+            columnListNode.appendChild(columnNode);
         }
 
         if (circulatio.includeNewColumnBtn) {
             let newColumnBtn = document.getElementsByClassName("circulatio-btn-new-c")[0];
             if (newColumnBtn) {
-                circulatioNode.appendChild(newColumnBtn);
+                columnListNode.appendChild(newColumnBtn);
             } else {
-                circulatio.getCirculatio().insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-c'>+ Add new column</div>");
+                columnListNode.insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-c'>+ Add new column</div>");
             }
         }
 
@@ -233,29 +248,49 @@ var circulatio = {
 // Internal circulatio variables
 const MINIMAL_WAIT_TIME = 33; // Around 30 times per second
 var circulatioDraggedItemNode = null;
+var circulatioDraggedColumnNode = null;
 var IsCirculatioDrag = false;
-var placeholderNode = circulatio.createPlaceholder();
+var itemPlaceholderNode = circulatio.createItemPlaceholder();
+var columnPlaceholderNode = circulatio.createColumnPlaceholder();
 
 document.addEventListener("dragstart", (event) => {
     if (!circulatio.allowMoveItems) {
         return;
     }
 
-    var elem = event.target.closest(".circulatio-i");
-    if (!elem || !elem.matches(".circulatio-i")) {
-        // User isn't dragging a circulation item
-        IsCirculatioDrag = false;
+    circulatioDraggedItemNode = null;
+
+    let elem = event.target.closest(".circulatio-i");
+    if (elem && elem.matches(".circulatio-i")) {
+        // Circulatio item drag
+        IsCirculatioDrag = true;
+        circulatioDraggedItemNode = elem;
+        itemPlaceholderNode.style.height = elem.clientHeight + "px";
+
+        setTimeout(() => {
+            circulatioDraggedItemNode.style.display = "none";
+        }, MINIMAL_WAIT_TIME);
         return;
     }
 
-    IsCirculatioDrag = true;
-    circulatioDraggedItemNode = event.target;
+    elem = event.target.closest(".circulatio-c");
+    if (elem && elem.matches(".circulatio-c")) {
+        // Circulatio column drag
+        IsCirculatioDrag = true;
+        circulatioDraggedColumnNode = elem;
+        columnPlaceholderNode.style.width = elem.clientWidth + "px";
 
-    placeholderNode.style.height = elem.clientHeight + "px";
+        if (circulatioDraggedColumnNode.nextSibling) {
+            circulatioDraggedColumnNode.parentNode.insertBefore(columnPlaceholderNode, circulatioDraggedColumnNode.nextSibling);
+        } else {
+            circulatio.moveColumn(columnPlaceholderNode, Number.MAX_SAFE_INTEGER);
+        }
 
-    setTimeout(() => {
-        circulatioDraggedItemNode.style.display = "none";
-    }, MINIMAL_WAIT_TIME);
+        setTimeout(() => {
+            circulatioDraggedColumnNode.style.display = "none";
+        }, MINIMAL_WAIT_TIME);
+        return;
+    }
 });
 
 document.addEventListener("drop", (event) => {
@@ -263,73 +298,129 @@ document.addEventListener("drop", (event) => {
         return;
     }
 
-    let columnNode;
-    let elem = event.target;
+    // Circulatio item drop
+    if (circulatioDraggedItemNode) {
+        let columnNode;
+        let elem = event.target;
 
-    if (elem.matches(".circulation-c")) {
-        columnNode = elem;
-    } else {
-        columnNode = elem.closest(".circulatio-c");
-    }
-
-    if (!columnNode) {
-        // User didn't drop it to a circulatio column
-        dropFinish();
-        return;
-    }
-
-    let columnContentNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
-
-    if (!columnContentNode) {
-        console.error("Column content div doesn't exist in this column");
-        dropFinish();
-        return;
-    }
-
-    if (circulatioBeforeDropItem) {
-        let columnId = columnNode.dataset.columnId;
-        let itemId = circulatioDraggedItemNode.dataset.itemId;
-
-        if (!columnId) {
-            console.warn("Circulation column doesn't have an Id, after drop function can't be executed");
-            dropFinish();
+        if (elem.matches(".circulation-c")) {
+            columnNode = elem;
+        } else {
+            columnNode = elem.closest(".circulatio-c");
         }
 
-        if (!itemId) {
-            console.warn("Circulation item doesn't have an Id, after drop function can't be executed");
-            dropFinish();
+        if (!columnNode) {
+            // User didn't drop it to a circulatio column
+            circulatioElemDropFinish();
+            return;
         }
 
-        // Remove dragged item from array to count the order correctly
-        let order = 0;
-        let parentChildren = placeholderNode.parentNode.childNodes;
-        for (let i = 0; i < parentChildren.length; i++) {
-            if (parentChildren[i] == circulatioDraggedItemNode) {
-                order--;
+        let columnContentNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
+
+        if (!columnContentNode) {
+            console.error("Column content div doesn't exist in this column");
+            circulatioElemDropFinish();
+            return;
+        }
+
+        if (circulatioBeforeDropItem) {
+            let columnId = columnNode.dataset.columnId;
+            let itemId = circulatioDraggedItemNode.dataset.itemId;
+
+            if (!columnId) {
+                console.warn("Circulation column doesn't have an Id, before drop function can't be executed");
+                circulatioElemDropFinish();
             }
 
-            if (parentChildren[i] == placeholderNode) {
-                order += i;
-                break;
+            if (!itemId) {
+                console.warn("Circulation item doesn't have an Id, before drop function can't be executed");
+                circulatioElemDropFinish();
             }
-        }
 
-        circulatioBeforeDropItem(columnId, itemId, order)
-            .then((result) => {
-                if (result) {
-                    // Move element to the placeholder position
-                    placeholderNode.parentNode.insertBefore(circulatioDraggedItemNode, placeholderNode);
-                    dropFinish();
+            // Remove dragged item from array to count the position correctly
+            let position = 0;
+            let parentChildren = itemPlaceholderNode.parentNode.childNodes;
+            for (let i = 0; i < parentChildren.length; i++) {
+                if (parentChildren[i] == circulatioDraggedItemNode) {
+                    position--;
                 }
-            }).catch((err) => {
-                console.error("circulatioBeforeDropFunction API error" + err);
-            });
 
+                if (parentChildren[i] == itemPlaceholderNode) {
+                    position += i;
+                    break;
+                }
+            }
+
+            circulatioBeforeDropItem(columnId, itemId, position)
+                .then((result) => {
+                    if (result) {
+                        // Move element to the placeholder position
+                        itemPlaceholderNode.parentNode.insertBefore(circulatioDraggedItemNode, itemPlaceholderNode);
+                        circulatioElemDropFinish();
+                    }
+                }).catch((err) => {
+                    console.error("circulatioBeforeDropItem API error" + err);
+                });
+        }
     }
 
-    function dropFinish() {
-        circulatioDraggedItemNode.style.display = null;
-        placeholderNode.remove();
+    if (circulatioDraggedColumnNode) {
+        let columnNode = event.target; // Placeholder
+
+        if (!columnNode) {
+            // User didn't drop it to a circulatio column
+            circulatioElemDropFinish();
+            return;
+        }
+
+        if (circulatioDraggedColumnNode) {
+            let columnId = circulatioDraggedColumnNode.dataset.columnId;
+
+            if (!columnId) {
+                console.warn("Circulation dragged column doesn't have an Id, before drop function can't be executed");
+                circulatioElemDropFinish();
+            }
+
+            // Remove dragged item from array to count the position correctly
+            // TODO: Logic to calculate position isn't working properly
+            let position = 0;
+            let parentChildren = columnPlaceholderNode.parentNode.getElementsByClassName("circulatio-c");
+            for (let i = 0; i < parentChildren.length; i++) {
+                if (parentChildren[i] == circulatioDraggedColumnNode) {
+                    position--;
+                }
+
+                if (parentChildren[i] == columnPlaceholderNode) {
+                    position += i;
+                    break;
+                }
+            }
+
+            circulatioBeforeDropColumn(columnId, position)
+                .then((result) => {
+                    if (result) {
+                        // Move element to the placeholder position
+                        columnPlaceholderNode.parentNode.insertBefore(circulatioDraggedColumnNode, columnPlaceholderNode);
+                        circulatioElemDropFinish();
+                    }
+                }).catch((err) => {
+                    console.error("circulatioBeforeDropColumn API error" + err);
+                });
+        }
+    }
+
+    function circulatioElemDropFinish() {
+        if (circulatioDraggedItemNode) {
+            circulatioDraggedItemNode.style.display = null;
+            itemPlaceholderNode.remove();
+            circulatioDraggedItemNode = null;
+        }
+
+        if (circulatioDraggedColumnNode) {
+            circulatioDraggedColumnNode.style.display = null;
+            columnPlaceholderNode.remove();
+            circulatioDraggedColumnNode = null;
+        }
     }
 });
 
@@ -338,24 +429,20 @@ var avoidDragOverFunction = false;
 document.addEventListener("dragover", (event) => {
     event.preventDefault();
 
-    if (avoidDragOverFunction) {
+    if (!IsCirculatioDrag || avoidDragOverFunction) {
         return;
     }
 
-    if (IsCirculatioDrag) {
+    if (circulatioDraggedItemNode) {
         avoidDragOverFunction = true;
         setTimeout(() => {
             avoidDragOverFunction = false;
         }, MINIMAL_WAIT_TIME);
 
         let targetElem = event.target;
-
-        if (!targetElem || targetElem.nodeType != Node.ELEMENT_NODE) {
-            placeholderNode.remove();
-            return;
-        }
-
-        if (targetElem.matches(".circulatio-p")) {
+        if (!targetElem
+            || targetElem.nodeType != Node.ELEMENT_NODE
+            || targetElem.matches(".circulatio-p-i")) {
             return;
         }
 
@@ -373,33 +460,78 @@ document.addEventListener("dragover", (event) => {
                 let addPlaceholderAboveTargetElement = (event.target.offsetHeight / 2) - event.layerY > 0;
 
                 if (addPlaceholderAboveTargetElement) {
-                    columnNode.prepend(placeholderNode)
+                    columnNode.prepend(itemPlaceholderNode)
                 } else {
-                    columnNode.appendChild(placeholderNode);
+                    columnNode.appendChild(itemPlaceholderNode);
                 }
 
                 return;
             }
 
             // In case user isn't dragging over a circulatio element
-            placeholderNode.remove();
+            itemPlaceholderNode.remove();
             return;
         }
 
-        // Calculates if it should move item before or after the item
+        // Calculates if it should insert item before or after the hovered item
         let addPlaceholderAboveTargetElement = (targetElem.offsetHeight / 2) - event.layerY > 0;
 
         if (addPlaceholderAboveTargetElement) {
             // Insert on the top of the target
-            targetElem.parentNode.insertBefore(placeholderNode, targetElem);
+            targetElem.parentNode.insertBefore(itemPlaceholderNode, targetElem);
 
         } else if (targetElem.nextSibling) {
             // Insert on the bottom of the target
-            targetElem.parentNode.insertBefore(placeholderNode, targetElem.nextSibling);
-
+            targetElem.parentNode.insertBefore(itemPlaceholderNode, targetElem.nextSibling);
         } else {
-            targetElem.parentNode.appendChild(placeholderNode);
+            targetElem.parentNode.appendChild(itemPlaceholderNode);
         }
+        return;
+    }
+
+    if (circulatioDraggedColumnNode) {
+        avoidDragOverFunction = true;
+        setTimeout(() => {
+            avoidDragOverFunction = false;
+        }, MINIMAL_WAIT_TIME);
+
+        let targetElem = event.target;
+        if (!targetElem
+            || targetElem.nodeType != Node.ELEMENT_NODE
+            || targetElem.matches(".circulatio-p-c")) {
+            return;
+        }
+
+        let columnNode = targetElem.closest(".circulatio-c");
+        let columnParent;
+
+        if (columnNode) {
+            columnParent = columnNode.parentNode;
+        } else {
+            // In case user isn't dragging over a circulatio column
+            return;
+        }
+
+        // Calculates if it should insert column before or after the hovered target element
+        let addPlaceholderAboveTargetElement = (targetElem.offsetWidth / 2) - event.layerX > 0;
+
+        if (addPlaceholderAboveTargetElement) {
+            // Insert on the top of the target
+            columnParent.insertBefore(columnPlaceholderNode, columnNode);
+        } else if (columnNode.nextSibling) {
+            // Insert on the bottom of the target
+            columnParent.insertBefore(columnPlaceholderNode, columnNode.nextSibling);
+        } else {
+            columnParent.appendChild(columnPlaceholderNode);
+        }
+
+        if (circulatio.includeNewColumnBtn) {
+            let newColumnBtn = document.getElementsByClassName("circulatio-btn-new-c")[0];
+            if (newColumnBtn) {
+                columnParent.appendChild(newColumnBtn);
+            }
+        }
+        return;
     }
 });
 

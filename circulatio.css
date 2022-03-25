@@ -1,9 +1,12 @@
 .circulatio {
-    position: relative;
-    display: flex;
-
     padding-bottom: 5rem;
     overflow-x: auto;
+}
+
+/* Columns */
+.circulatio-c-list {
+    position: relative;
+    display: flex;
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -14,7 +17,6 @@
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-/* Columns */
 .circulatio-c {
     position: relative;
     display: inline-block;
@@ -32,13 +34,14 @@
     font-weight: bold;
     padding: 1rem;
     cursor: pointer;
-    margin-bottom: .4rem;
     line-height: 1.6rem;
+    min-height: auto;
 }
 
 .labelInput .circulatio-c-rename {
     display: none;
-    margin: .5rem .5rem .5rem 1rem;
+    width: calc(100% - 60px);
+    margin: .5rem 0 .5rem 1rem;
 }
 
 .circulatio-c .dropdown {
@@ -47,6 +50,11 @@
 
 .circulatio-c .dropdown button {
     border: none;
+}
+
+/* Placeholder */
+.circulatio-p-c {
+    flex: none;
 }
 
 /* Item */
@@ -75,7 +83,7 @@
     margin: 0rem 0.5rem;
     flex: 0 0 26rem;
     height: 3rem;
-    padding: 1rem;
+    padding: 1rem 0;
 
     background-color: #252525;
     cursor: pointer;

@@ -11,9 +11,13 @@ labelInputAction = (name, newValue) => {
     return true;
 };
 
-circulatioBeforeDropItem = (columnId, itemId, order) => {
-    // Return a promise here
-    console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it assumed the number " + order + " in the order");
+circulatioBeforeDropItem = (columnId, itemId, position) => {
+    console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it's currently the number " + position + " from the top");
+    return new Promise((resolve, reject) => resolve(true));
+};
+
+circulatioBeforeDropColumn = (columnId, position) => {
+    console.log("User moved column(Id: " + columnId + ") to " + position + " position");
     return new Promise((resolve, reject) => resolve(true));
 };
 
