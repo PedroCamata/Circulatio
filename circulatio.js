@@ -293,7 +293,7 @@ document.addEventListener("dragstart", (event) => {
     }
 });
 
-document.addEventListener("drop", (event) => {
+document.addEventListener("dragend", (event) => {
     if (!IsCirculatioDrag) {
         return;
     }
