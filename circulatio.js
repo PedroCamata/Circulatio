@@ -382,10 +382,16 @@ document.addEventListener("dragend", (event) => {
             }
 
             // Remove dragged item from array to count the position correctly
-            // TODO: Logic to calculate position isn't working properly
             let position = 0;
-            let parentChildren = columnPlaceholderNode.parentNode.getElementsByClassName("circulatio-c");
+            let parentChildren = columnPlaceholderNode.parentNode.childNodes;
             for (let i = 0; i < parentChildren.length; i++) {
+
+                // Ignore all elements that aren't column or column placeholder
+                if (!parentChildren[i].matches(".circulatio-c")
+                    && !parentChildren[i].matches(".circulatio-p-c")) {
+                    break;
+                }
+
                 if (parentChildren[i] == circulatioDraggedColumnNode) {
                     position--;
                 }
@@ -421,6 +427,8 @@ document.addEventListener("dragend", (event) => {
             columnPlaceholderNode.remove();
             circulatioDraggedColumnNode = null;
         }
+
+        IsCirculatioDrag = false;
     }
 });
 
@@ -446,46 +454,45 @@ document.addEventListener("dragover", (event) => {
             return;
         }
 
+        let itemListNode;
         targetElem = targetElem.closest(".circulatio-i");
 
-        // In case user isn't dragging over a circulatio item
-        if (!targetElem) {
-            let columnNode = event.target.closest(".circulatio-c");
-
-            // In case user is dragging over a circulatio column
+        if (targetElem) {
+            itemListNode = targetElem.parentNode;
+        } else {
+            targetElem = event.target;
+            let columnNode = targetElem.closest(".circulatio-c");
             if (columnNode) {
-                columnNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
-
-                // Calculates if it should move item to the top or bottom of the column
-                let addPlaceholderAboveTargetElement = (event.target.offsetHeight / 2) - event.layerY > 0;
-
-                if (addPlaceholderAboveTargetElement) {
-                    columnNode.prepend(itemPlaceholderNode)
-                } else {
-                    columnNode.appendChild(itemPlaceholderNode);
-                }
-
+                targetElem = columnNode;
+                itemListNode = columnNode.getElementsByClassName("circulatio-c-content")[0];
+            } else {
+                // In case user isn't dragging over a circulatio column
                 return;
             }
-
-            // In case user isn't dragging over a circulatio element
-            itemPlaceholderNode.remove();
-            return;
         }
 
         // Calculates if it should insert item before or after the hovered item
         let addPlaceholderAboveTargetElement = (targetElem.offsetHeight / 2) - event.layerY > 0;
 
-        if (addPlaceholderAboveTargetElement) {
-            // Insert on the top of the target
-            targetElem.parentNode.insertBefore(itemPlaceholderNode, targetElem);
+        if (targetElem.matches(".circulatio-i")) {
+            if (addPlaceholderAboveTargetElement) {
+                // Insert on the top of the target
+                itemListNode.insertBefore(itemPlaceholderNode, targetElem);
 
-        } else if (targetElem.nextSibling) {
-            // Insert on the bottom of the target
-            targetElem.parentNode.insertBefore(itemPlaceholderNode, targetElem.nextSibling);
+            } else if (targetElem.nextSibling) {
+                // Insert on the bottom of the target
+                itemListNode.insertBefore(itemPlaceholderNode, targetElem.nextSibling);
+            } else {
+                itemListNode.appendChild(itemPlaceholderNode);
+            }
         } else {
-            targetElem.parentNode.appendChild(itemPlaceholderNode);
+            if (addPlaceholderAboveTargetElement) {
+                itemListNode.prepend(itemPlaceholderNode)
+            } else {
+                itemListNode.appendChild(itemPlaceholderNode);
+            }
         }
+
         return;
     }
 

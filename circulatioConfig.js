@@ -12,12 +12,12 @@ labelInputAction = (name, newValue) => {
 };
 
 circulatioBeforeDropItem = (columnId, itemId, position) => {
-    console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") and it's currently the number " + position + " from the top");
+    console.log("User moved item(Id: " + itemId + ") to the column(Id:" + columnId + ") position " + position);
     return new Promise((resolve, reject) => resolve(true));
 };
 
 circulatioBeforeDropColumn = (columnId, position) => {
-    console.log("User moved column(Id: " + columnId + ") to " + position + " position");
+    console.log("User moved column(Id: " + columnId + ") to position " + position);
     return new Promise((resolve, reject) => resolve(true));
 };
 
