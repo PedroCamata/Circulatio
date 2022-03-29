@@ -30,7 +30,7 @@
     background-color: #080808;
 }
 
-.labelInput .circulatio-c-name.text, .circulatio-c-name {
+.labelInput .text.circulatio-c-name {
     font-weight: bold;
     padding: 1rem;
     cursor: pointer;
@@ -38,10 +38,14 @@
     min-height: auto;
 }
 
-.labelInput .circulatio-c-rename {
+.labelInput .input.circulatio-c-rename {
     display: none;
     width: calc(100% - 60px);
     margin: .5rem 0 .5rem 1rem;
+}
+
+.labelInput .text.circulatio-c-name:hover {
+    background-color: inherit;
 }
 
 .circulatio-c .dropdown {

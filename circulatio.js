@@ -580,6 +580,18 @@ function circulatioButtonClicks(event) {
         }
     }
 
+    // Enable select column name text on draggable columns
+    if (event.target.matches(".labelInput .text.circulatio-c-name")
+        || event.target.matches(".labelInput .input.circulatio-c-rename")) {
+        let columnNode = event.target.closest(".circulatio-c");
+        columnNode.setAttribute("draggable", false);
+    } else {
+        let allColumns = document.getElementsByClassName("circulatio-c");
+        for (let i = 0; i < allColumns.length; i++) {
+            allColumns[i].setAttribute("draggable", true);
+        }
+    }
+
     // Click on item
     let elem = event.target.closest(".circulatio-i");
     if (elem) {
