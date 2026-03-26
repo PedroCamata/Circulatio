@@ -109,7 +109,7 @@ var circulatio = {
             if (newColumnBtn) {
                 columnListNode.appendChild(newColumnBtn);
             } else {
-                columnListNode.insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-c'>+ Add new column</div>");
+                columnListNode.insertAdjacentHTML("beforeend", "<div class='circulatio-btn-new-c'>+</div>");
             }
         }
 
