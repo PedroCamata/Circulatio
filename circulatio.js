@@ -608,6 +608,16 @@ function circulatioButtonClicks(event) {
     }
 }
 
+
+// Listen when user press enter
+document.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+
+    hideAndSaveAllLabelInputs()
+  }
+}); 
+
 // Former Osso.js
 let labelInputBeforeAction = false;
 let labelInputAction = false;
@@ -735,31 +745,33 @@ document.addEventListener('click', (event) => {
         hideAndSaveAllLabelInputs();
     }
 
-    // Private function
-    function hideAndSaveAllLabelInputs() {
-        let labelInputElems = document.getElementsByClassName("labelInput");
-        for (let i = 0; i < labelInputElems.length; i++) {
-            let inputElem = labelInputElems[i].getElementsByClassName("input")[0];
 
-            // Remove <script> tags
-            let inputValueSanitized = inputElem.value
-                .replace(/<script[^>]*>/gi, "<code>")
-                .replace(/<\/script>/gi, "</code>");
-            inputElem.value = inputValueSanitized;
-
-            let textElem = labelInputElems[i].getElementsByClassName("text")[0];
-
-            if (inputValueSanitized != textElem.innerHTML
-                && labelInputAction) {
-                // Call API
-                if (labelInputAction(inputElem.name, inputValueSanitized)) {
-                    // Replace string line break to <br>
-                    textElem.innerHTML = inputValueSanitized.replace(/(?:\r\n|\r|\n)/g, "<br>");
-                }
-            }
-
-            textElem.style.display = ""; // inherit
-            inputElem.style.display = ""; // none by default
-        }
-    }
 }, false);
+
+// Private function
+function hideAndSaveAllLabelInputs() {
+    let labelInputElems = document.getElementsByClassName("labelInput");
+    for (let i = 0; i < labelInputElems.length; i++) {
+        let inputElem = labelInputElems[i].getElementsByClassName("input")[0];
+
+        // Remove <script> tags
+        let inputValueSanitized = inputElem.value
+            .replace(/<script[^>]*>/gi, "<code>")
+            .replace(/<\/script>/gi, "</code>");
+        inputElem.value = inputValueSanitized;
+
+        let textElem = labelInputElems[i].getElementsByClassName("text")[0];
+
+        if (inputValueSanitized != textElem.innerHTML
+            && labelInputAction) {
+            // Call API
+            if (labelInputAction(inputElem.name, inputValueSanitized)) {
+                // Replace string line break to <br>
+                textElem.innerHTML = inputValueSanitized.replace(/(?:\r\n|\r|\n)/g, "<br>");
+            }
+        }
+
+        textElem.style.display = ""; // inherit
+        inputElem.style.display = ""; // none by default
+    }
+}
