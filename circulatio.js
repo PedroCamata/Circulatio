@@ -762,6 +762,12 @@ function hideAndSaveAllLabelInputs() {
 
         let textElem = labelInputElems[i].getElementsByClassName("text")[0];
 
+        if (inputValueSanitized.length === 0) {
+            // Do not save empty string, revert input value
+            inputValueSanitized = textElem.innerHTML;
+            inputElem.value = inputValueSanitized;
+        }
+
         if (inputValueSanitized != textElem.innerHTML
             && labelInputAction) {
             // Call API
