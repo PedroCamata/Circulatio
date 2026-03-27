@@ -748,7 +748,7 @@ document.addEventListener('click', (event) => {
 
 }, false);
 
-// Private function
+// Private functions
 function hideAndSaveAllLabelInputs() {
     let labelInputElems = document.getElementsByClassName("labelInput");
     for (let i = 0; i < labelInputElems.length; i++) {
@@ -767,8 +767,7 @@ function hideAndSaveAllLabelInputs() {
             inputValueSanitized = textElem.innerHTML;
             inputElem.value = inputValueSanitized;
         }
-
-        if (inputValueSanitized != textElem.innerHTML
+        else if (inputValueSanitized != textElem.innerHTML
             && labelInputAction) {
             // Call API
             if (labelInputAction(inputElem.name, inputValueSanitized)) {
