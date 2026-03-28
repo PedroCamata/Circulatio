@@ -49,8 +49,6 @@ input[type="text"], textarea { min-height: 3.8rem; padding: 1rem; background-col
 
 .labelInput .input { display: none; }
 
-button, input, textarea { margin: 0px 0px 1.5rem; border-spacing: 0px; }
-
 .p1 { padding: 1rem; }
 
 body { background-color: var(--background-submain); color: var(--text-main); }
