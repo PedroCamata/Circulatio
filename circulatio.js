@@ -741,6 +741,11 @@ document.addEventListener('click', (event) => {
             labelInputBeforeAction(inputElem.name);
         }
 
+        // Focus on input
+        inputElem.selectionStart = -1;
+        inputElem.selectionEnd = -1;
+        inputElem.focus();
+
     } else if (!event.target.matches(".labelInput .input")) {
         hideAndSaveAllLabelInputs();
     }
