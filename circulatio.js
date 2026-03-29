@@ -772,12 +772,28 @@ function hideAndSaveAllLabelInputs() {
             inputValueSanitized = textElem.innerHTML;
             inputElem.value = inputValueSanitized;
         }
+        // Check if it has changed
         else if (inputValueSanitized != textElem.innerHTML
             && labelInputAction) {
-            // Call API
-            if (labelInputAction(inputElem.name, inputValueSanitized)) {
-                // Replace string line break to <br>
-                textElem.innerHTML = inputValueSanitized.replace(/(?:\r\n|\r|\n)/g, "<br>");
+
+            let textValueSanitized = inputValueSanitized.replace(/(?:\r\n|\r|\n)/g, "<br>");
+
+            // Replace string line break to <br>
+            textElem.innerHTML = textValueSanitized;
+
+            // Check if it's within a circulatio column
+            if(labelInputElems[i].parentElement
+                                 .parentElement
+                                 .matches(".circulatio-c")) {
+                const columnElem = labelInputElems[i].parentElement.parentElement;
+                const columnId = columnElem.dataset.columnId;
+
+                if (columnId) {
+                    circulatioRenameColumn(textValueSanitized, columnId)
+                }
+            } else {
+                // Generic labelInput
+                labelInputAction(inputElem.name, textValueSanitized)
             }
         }
 
