@@ -59,6 +59,15 @@ var circulatio = {
 
         return newColumn;
     },
+    moveItemById: (itemId, columnId, position) => {
+        circulatio.moveItem(
+            circulatio.getItemNodeByItemId(itemId),
+            columnId,
+            position
+        );
+
+        return true;
+    },
     moveItem: (itemNode, columnId, position) => {
         if (!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("itemNode isn't a node element");
@@ -293,7 +302,7 @@ document.addEventListener("dragstart", (event) => {
     }
 });
 
-document.addEventListener("dragend", (event) => {
+document.addEventListener("dragend", async (event) => {
     if (!IsCirculatioDrag) {
         return;
     }
@@ -324,10 +333,11 @@ document.addEventListener("dragend", (event) => {
         }
 
         if (circulatioBeforeDropItem) {
-            let columnId = columnNode.dataset.columnId;
-            let itemId = circulatioDraggedItemNode.dataset.itemId;
+            const originalColumnId = columnNode.dataset.columnId;
+            const newColumnId = itemPlaceholderNode.closest(".circulatio-c").dataset.columnId;
+            const itemId = circulatioDraggedItemNode.dataset.itemId;
 
-            if (!columnId) {
+            if (!originalColumnId) {
                 console.warn("Circulation column doesn't have an Id, before drop function can't be executed");
                 circulatioElemDropFinish();
             }
@@ -351,13 +361,11 @@ document.addEventListener("dragend", (event) => {
                 }
             }
 
-            circulatioBeforeDropItem(columnId, itemId, position)
-                .then((result) => {
-                    if (result) {
-                        // Move element to the placeholder position
-                        itemPlaceholderNode.parentNode.insertBefore(circulatioDraggedItemNode, itemPlaceholderNode);
-                        circulatioElemDropFinish();
-                    }
+            await circulatioBeforeDropItem(newColumnId, itemId, position)
+                .then(() => {
+                    // Move element to the placeholder position
+                    itemPlaceholderNode.parentNode.insertBefore(circulatioDraggedItemNode, itemPlaceholderNode);
+                    circulatioElemDropFinish();
                 }).catch((err) => {
                     console.error("circulatioBeforeDropItem API error" + err);
                 });
