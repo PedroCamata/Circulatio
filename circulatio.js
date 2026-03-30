@@ -60,13 +60,11 @@ var circulatio = {
         return newColumn;
     },
     moveItemById: (itemId, columnId, position) => {
-        circulatio.moveItem(
+        return circulatio.moveItem(
             circulatio.getItemNodeByItemId(itemId),
             columnId,
             position
         );
-
-        return true;
     },
     moveItem: (itemNode, columnId, position) => {
         if (!itemNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
@@ -80,6 +78,10 @@ var circulatio = {
             return false;
         }
 
+        if (columnNode.contains(itemNode)) {
+            columnNode.removeChild(itemNode);
+        }
+
         let qtyColumnItems = columnNode.childElementCount;
         if (qtyColumnItems > 0 && qtyColumnItems > position) {
             let childNode = columnNode.children[position];
@@ -89,6 +91,12 @@ var circulatio = {
         }
 
         return true;
+    },
+    moveColumnById: (columnId, position) => {
+        return circulatio.moveColumn(
+            circulatio.getColumnNodeByColumnId(columnId),
+            position
+        );
     },
     moveColumn: (columnNode, position) => {
         if (!columnNode || columnNode.nodeType !== Node.ELEMENT_NODE) {
@@ -103,6 +111,10 @@ var circulatio = {
             columnListNode = document.createElement("div");
             columnListNode.classList.add("circulatio-c-list");
             circulatioNode.appendChild(columnListNode);
+        }
+
+        if (columnListNode.contains(columnNode)) {
+            columnListNode.removeChild(columnNode);
         }
 
         let qtyColumns = columnListNode.childElementCount;
@@ -362,7 +374,8 @@ document.addEventListener("dragend", async (event) => {
             }
 
             await circulatioBeforeDropItem(newColumnId, itemId, position)
-                .then(() => {
+                .then((result) => {
+                    if(!result) return; 
                     // Move element to the placeholder position
                     itemPlaceholderNode.parentNode.insertBefore(circulatioDraggedItemNode, itemPlaceholderNode);
                     circulatioElemDropFinish();
@@ -412,11 +425,10 @@ document.addEventListener("dragend", async (event) => {
 
             circulatioBeforeDropColumn(columnId, position)
                 .then((result) => {
-                    if (result) {
-                        // Move element to the placeholder position
-                        columnPlaceholderNode.parentNode.insertBefore(circulatioDraggedColumnNode, columnPlaceholderNode);
-                        circulatioElemDropFinish();
-                    }
+                    if (!result) return;
+                    // Move element to the placeholder position
+                    columnPlaceholderNode.parentNode.insertBefore(circulatioDraggedColumnNode, columnPlaceholderNode);
+                    circulatioElemDropFinish();
                 }).catch((err) => {
                     console.error("circulatioBeforeDropColumn API error" + err);
                 });
