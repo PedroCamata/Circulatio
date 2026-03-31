@@ -291,6 +291,7 @@ document.addEventListener("dragstart", (event) => {
         IsCirculatioDrag = true;
         circulatioDraggedColumnNode = elem;
         columnPlaceholderNode.style.width = elem.clientWidth + "px";
+        columnPlaceholderNode.style.height = elem.clientHeight + "px";
 
         if (circulatioDraggedColumnNode.nextSibling) {
             circulatioDraggedColumnNode.parentNode.insertBefore(columnPlaceholderNode, circulatioDraggedColumnNode.nextSibling);
