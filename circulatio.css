@@ -65,7 +65,7 @@ iinput[type="text"], textarea { background-color: var(--background-submain); col
 
 .circulatio-c-list { position: relative; display: flex; user-select: none;  justify-content: center; flex-wrap: wrap; }
 
-.circulatio-c { position: relative; display: inline-block; margin: 1rem; flex: 1 0 28rem; background-color: var(--kanban-column); height: 100%; border: 1px solid #555; max-width: 35rem;}
+.circulatio-c { position: relative; display: inline-block; margin: 1rem; width: 30rem; background-color: var(--kanban-column); height: 100%; border: 1px solid #555;}
 
 .labelInput .text.circulatio-c-name { font-weight: bold; padding: 1rem; cursor: pointer; line-height: 1.6rem; min-height: auto; }
 
@@ -99,10 +99,7 @@ iinput[type="text"], textarea { background-color: var(--background-submain); col
 
 .circulatio-c-content .circulatio-i:last-child { padding-bottom: 1rem; }
 
-.circulatio-c-content {
-  min-height: 10rem;
-  margin: .5rem 1rem 0;
-}
+.circulatio-c-content { min-height: 10rem; margin: .5rem 1rem 0; }
 
 .circulatio-btn-new-c { display: inline-block; margin: 1rem 0.5rem; width: 5rem; height: 5rem; line-height: 5rem; background-color: var(--accent); cursor: pointer; text-align: center;font-weight: bold; font-size: 3rem; }
 
