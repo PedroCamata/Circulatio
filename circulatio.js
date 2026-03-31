@@ -148,9 +148,14 @@ var circulatio = {
         return true;
     },
     removeColumn: (columnId) => {
-        if (circulatioBeforeRemoveItem && !circulatioBeforeRemoveColumn(columnId)) {
+        countColumns = document.getElementsByClassName("circulatio-c").length;
+
+        if (countColumns <= 1
+            && circulatioBeforeRemoveItem
+            && !circulatioBeforeRemoveColumn(columnId)) {
             return false;
         }
+        
         circulatio.getColumnNodeByColumnId(columnId).remove();
         return true;
     },
@@ -217,15 +222,14 @@ var circulatio = {
     jsonToCirculatio: (data) => {
         let dataColumns = data.columns;
 
+        // Config
+        circulatio.columnActionBtns = data.includeColumnActionDropdown;
+        circulatio.includeNewColumnBtn = data.includeNewColumnBtn;
+        circulatio.includeNewItemBtn = data.includeNewItemBtn;
+        circulatio.allowRenameColumn = data.allowRenameColumn;
+        circulatio.allowMoveItems = data.allowMoveItems;
+
         for (let i = 0; i < dataColumns.length; i++) {
-
-            // Config
-            circulatio.columnActionBtns = data.includeColumnActionDropdown;
-            circulatio.includeNewColumnBtn = data.includeNewColumnBtn;
-            circulatio.includeNewItemBtn = data.includeNewItemBtn;
-            circulatio.allowRenameColumn = data.allowRenameColumn;
-            circulatio.allowMoveItems = data.allowMoveItems;
-
             let newColumn = circulatio.createColumn(dataColumns[i].id, dataColumns[i].name);
 
             // Always add it to the end
