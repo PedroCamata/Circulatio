@@ -628,11 +628,7 @@ function circulatioButtonClicks(event) {
 
 // Listen when user press enter
 document.addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
-    event.preventDefault();
-
-    hideAndSaveAllLabelInputs()
-  }
+  if (event.key === "Enter") hideAndSaveAllLabelInputs();
 }); 
 
 // Former Osso.js
