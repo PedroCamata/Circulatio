@@ -65,7 +65,7 @@ iinput[type="text"], textarea { background-color: var(--background-submain); col
 
 .circulatio-c-list { position: relative; display: flex; user-select: none;  justify-content: center; flex-wrap: wrap; }
 
-.circulatio-c { position: relative; display: inline-block; margin: 1rem; width: 30rem; background-color: var(--kanban-column); height: 100%; border: 1px solid #555;}
+.circulatio-c { position: relative; display: inline-block; margin: 1rem; width: 29rem; background-color: var(--kanban-column); height: 100%; border: 1px solid #555;}
 
 .labelInput .text.circulatio-c-name { font-weight: bold; padding: 1rem; cursor: pointer; line-height: 1.6rem; min-height: auto; }
 
