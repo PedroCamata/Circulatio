@@ -72,22 +72,22 @@ var circulatio = {
             return false;
         }
 
-        let columnNode = circulatio.getColumnContentNodeByColumnId(columnId);
-        if (!columnNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
+        let columnContentNode = circulatio.getColumnContentNodeByColumnId(columnId);
+        if (!columnContentNode || itemNode.nodeType !== Node.ELEMENT_NODE) {
             console.error("Column with columnId(" + columnId + ") not found");
             return false;
         }
 
-        if (columnNode.contains(itemNode)) {
-            columnNode.removeChild(itemNode);
+        if (columnContentNode.contains(itemNode)) {
+            columnContentNode.removeChild(itemNode);
         }
 
-        let qtyColumnItems = columnNode.childElementCount;
+        let qtyColumnItems = columnContentNode.childElementCount;
         if (qtyColumnItems > 0 && qtyColumnItems > position) {
-            let childNode = columnNode.children[position];
-            columnNode.insertBefore(itemNode, childNode);
+            let childNode = columnContentNode.children[position];
+            columnContentNode.insertBefore(itemNode, childNode);
         } else {
-            columnNode.appendChild(itemNode);
+            columnContentNode.appendChild(itemNode);
         }
 
         return true;
@@ -155,30 +155,21 @@ var circulatio = {
         return true;
     },
     getColumnNodeByColumnId: (columnId) => {
-        let columns = document.getElementsByClassName("circulatio-c");
-        for (let i = 0; i < columns.length; i++) {
-            if (columns[i].dataset.columnId == columnId) {
-                return columns[i];
-            }
-        }
+        const column = document.querySelector(`.circulatio-c[data-column-id="${columnId}"]`);
+        
+        if (column) return column;
         return null;
     },
     getColumnContentNodeByColumnId: (columnId) => {
-        let columns = document.getElementsByClassName("circulatio-c");
-        for (let i = 0; i < columns.length; i++) {
-            if (columns[i].dataset.columnId == columnId) {
-                return columns[i].getElementsByClassName("circulatio-c-content")[0];
-            }
-        }
+        const column = circulatio.getColumnNodeByColumnId(columnId);
+
+        if(column) return column.getElementsByClassName("circulatio-c-content")[0];
         return null;
     },
     getItemNodeByItemId: (itemId) => {
-        let items = document.getElementsByClassName("circulatio-i");
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].dataset.itemId == itemId) {
-                return items[i];
-            }
-        }
+        const item = document.querySelector(`.circulatio-i[data-item-id="${itemId}"]`);
+
+        if (item) return item;
         return null;
     },
     getCirculatio: () => {
