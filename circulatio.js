@@ -148,14 +148,15 @@ var circulatio = {
         return true;
     },
     removeColumn: (columnId) => {
-        countColumns = document.getElementsByClassName("circulatio-c").length;
+        const countColumns = document.getElementsByClassName("circulatio-c").length;
 
-        if (countColumns <= 1
-            && circulatioBeforeRemoveItem
+        if(countColumns <= 1) return false;
+
+        if (circulatioBeforeRemoveItem
             && !circulatioBeforeRemoveColumn(columnId)) {
             return false;
         }
-        
+
         circulatio.getColumnNodeByColumnId(columnId).remove();
         return true;
     },
