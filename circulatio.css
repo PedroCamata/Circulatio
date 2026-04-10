@@ -91,7 +91,7 @@ iinput[type="text"], textarea { background-color: var(--background-submain); col
   margin: 1rem 0.5rem;
 }
 
-.circulatio-i-content { background-color: var(--kanban-item); box-shadow: #0000004d 5px 5px 7px; padding: 1rem; color: var(--kanban-item-text, #000) }
+.circulatio-i-content { background-color: var(--kanban-item); box-shadow: #0000004d 5px 5px 7px; padding: 1rem; color: var(--kanban-item-text, #000); overflow-wrap: break-word; }
 
 .circulatio-i:hover .circulatio-i-content, .circulatio-btn-new-c:hover { background-color: var(--btn-highlight); }
 
